@@ -4,6 +4,7 @@
 
 
 #ifndef DATA_STRUCTURES_234218_NODE_H
+#define DATA_STRUCTURES_234218_NODE_H
 
 template<class T>
 class Node {
@@ -20,15 +21,15 @@ public:
     Node(std::shared_ptr<Node<T>> left, std::shared_ptr<Node<T>> right, std::shared_ptr<Node<T>> father, int key,
          T element);
 
-    int UpdateBalanceFactor() {
+    void UpdateBalanceFactor() {
         if (this->left == NULL)
             h_left = 0;
         else
-            h_left = this->h_left + 1;
+            h_left = std::max(left->h_left, left->h_right) + 1;
         if (this->right == NULL)
             h_right = 0;
         else
-            h_left = this->h_right + 1;
+            h_right = std::max(right->h_right, right->h_left) + 1;
         balance_factor = h_left - h_right;
     }
 };
@@ -41,7 +42,5 @@ Node<T>::Node(std::shared_ptr<Node<T>> left, std::shared_ptr<Node<T>> right, std
 
 }
 
-
-#define DATA_STRUCTURES_234218_NODE_H
 
 #endif //DATA_STRUCTURES_234218_NODE_H
