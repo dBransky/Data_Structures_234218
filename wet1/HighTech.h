@@ -33,6 +33,8 @@ public:
 
     void RemoveEmployee(int employee_id);
 
+    void RemoveCompany(int company_id);
+
     void AddCompany(int company_id, int value);
 
 

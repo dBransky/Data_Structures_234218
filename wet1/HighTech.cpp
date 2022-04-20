@@ -23,6 +23,11 @@ void HighTech::RemoveEmployee(int employee_id) {
 
 }
 
+void HighTech::RemoveCompany(int company_id) {
+    companies.remove(company_id);
+
+}
+
 Company::Company(int value) : value(value) {
 
 }
