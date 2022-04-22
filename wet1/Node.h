@@ -6,19 +6,20 @@
 #ifndef DATA_STRUCTURES_234218_NODE_H
 #define DATA_STRUCTURES_234218_NODE_H
 
-template<class T>
+template<class T, class Key>
 class Node {
 public:
     int h_left;
     int h_right;
     int balance_factor;
-    int key;
+    Key key;
     T element;
     std::shared_ptr<Node> left;
     std::shared_ptr<Node> right;
     std::shared_ptr<Node> father;
 
-    Node(std::shared_ptr<Node<T>> left, std::shared_ptr<Node<T>> right, std::shared_ptr<Node<T>> father, int key,
+    Node(std::shared_ptr<Node<T, Key>> left, std::shared_ptr<Node<T, Key>> right, std::shared_ptr<Node<T, Key>> father,
+         Key key,
          T element);
 
     void UpdateBalanceFactor() {
@@ -34,9 +35,11 @@ public:
     }
 };
 
-template<class T>
-Node<T>::Node(std::shared_ptr<Node<T>> left, std::shared_ptr<Node<T>> right, std::shared_ptr<Node<T>> father, int key,
-              T element):left(left), right(right), father(father), key(key), element(element) {
+template<class T, class Key>
+Node<T, Key>::Node(std::shared_ptr<Node<T, Key>> left, std::shared_ptr<Node<T, Key>> right,
+                   std::shared_ptr<Node<T, Key>> father, Key key, T element):
+
+        left(left), right(right), father(father), key(key), element(element) {
     this->UpdateBalanceFactor();
 
 

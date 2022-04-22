@@ -20,12 +20,25 @@ class Company {
 private:
     int value;
 public:
-    Company(int);
+    explicit Company(int);
+};
+
+class SalaryId {
+    double salary;
+    int id;
+
+    friend bool operator>(SalaryId id1, SalaryId id2) {
+        return ((id1.salary == id2.salary && id1.id > id2.id) || id1.salary > id2.salary);
+    }
+
+    friend bool operator<(SalaryId id1, SalaryId id2) {
+        return !(id1 > id2);
+    }
 };
 
 class HighTech {
-    Map<Employee> employees;
-    Map<Company> companies;
+    Map<Employee, int> employees;
+    Map<Company, int> companies;
 public:
     HighTech();
 
