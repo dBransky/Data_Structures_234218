@@ -5,21 +5,21 @@
 #include "HighTech.h"
 
 
-HighTech::HighTech() : employees_sorted_by_id(), companies(), employees_sorted_by_salary() , employee_with_best_salary(NULL) {
+HighTech::HighTech()
+        : employees_sorted_by_id(), companies(), employees_sorted_by_salary(), employee_with_best_salary(NULL) {
     employee_id_with_best_salary = 0;
 
 }
 
-void HighTech::AddEmployee(int employee_id, int company_id, int salary, int grade)
-{
-    Company* company = &(companies.find(company_id));
-    Employee new_employee = Employee(company_id, salary,grade,company);
+void HighTech::AddEmployee(int employee_id, int company_id, int salary, int grade) {
+    Company *company = &(companies.find(company_id));
+    Employee new_employee = Employee(company_id, salary, grade, company);
     employees_sorted_by_id.insert(employee_id, new_employee);
     company->AddNewEmployee();
-    company->GetCompanyEmployees().insert(employee_id, new_employee);
-    employees_sorted_by_salary.insert(employee_id, new_employee);
-    if (salary > employee_with_best_salary->GetSalary() || (salary == employee_with_best_salary->GetSalary() && employee_id < employee_id_with_best_salary))
-    {
+    company->GetCompanyEmployees().insert(SalaryId(salary, employee_id), new_employee);
+    employees_sorted_by_salary.insert(SalaryId(salary, employee_id), new_employee);
+    if (salary > employee_with_best_salary->GetSalary() ||
+        (salary == employee_with_best_salary->GetSalary() && employee_id < employee_id_with_best_salary)) {
         employee_with_best_salary = &(new_employee);
         employee_id_with_best_salary = employee_id;
     }
@@ -30,98 +30,76 @@ void HighTech::AddCompany(int company_id, int value) {
 
 }
 
-void HighTech::RemoveEmployee(int employee_id)
-{
-    Employee& employee = employees_sorted_by_id.find(employee_id);
+void HighTech::RemoveEmployee(int employee_id) {
+    Employee &employee = employees_sorted_by_id.find(employee_id);
     employees_sorted_by_id.remove(employee_id);
     employee.GetCompany()->RemoveEmployee();
 }
 
-void HighTech::RemoveCompany(int company_id)
-{
-    Company& company = companies.find(company_id);
-    if (company.GetAmountOfEmployees() == 0)
-    {
+void HighTech::RemoveCompany(int company_id) {
+    Company &company = companies.find(company_id);
+    if (company.GetAmountOfEmployees() == 0) {
         companies.remove(company_id);
     }
 }
 
-void HighTech::GetCompanyInfo(int company_id, int *Value, int *NumEmployees)
-{
-    Company& company = companies.find(company_id);
+void HighTech::GetCompanyInfo(int company_id, int *Value, int *NumEmployees) {
+    Company &company = companies.find(company_id);
     *NumEmployees = company.GetAmountOfEmployees();
     *Value = company.GetCompanyValue();
 }
 
-void HighTech::GetEmployeeInfo(int EmployeeId, int *EmployerID, int *Salary, int *Grade)
-{
-    Employee& employee = employees_sorted_by_id.find(EmployeeId);
+void HighTech::GetEmployeeInfo(int EmployeeId, int *EmployerID, int *Salary, int *Grade) {
+    Employee &employee = employees_sorted_by_id.find(EmployeeId);
     *EmployerID = employee.GetCompanyId();
     *Salary = employee.GetSalary();
     *Grade = employee.GetGrade();
 }
 
-void HighTech::IncreaseCompanyValue(int CompanyId, int ValueIncrease)
-{
+void HighTech::IncreaseCompanyValue(int CompanyId, int ValueIncrease) {
     if (ValueIncrease > 0 && CompanyId > 0) {
         Company &company = companies.find(CompanyId);
         company.AddCompanyValue(ValueIncrease);
     }
 }
 
-void HighTech::PromoteEmployee(int EmployeeID, int SalaryIncrease, int BumpGrade)
-{
-    Employee& employee = employees_sorted_by_id.find(EmployeeID);
+void HighTech::PromoteEmployee(int EmployeeID, int SalaryIncrease, int BumpGrade) {
+    Employee &employee = employees_sorted_by_id.find(EmployeeID);
     employee.IncreaseSalary(SalaryIncrease);
-    if (BumpGrade > 0)
-    {
+    if (BumpGrade > 0) {
         employee.IncreaseGrade();
     }
 }
 
-void HighTech::HireEmployee(int EmployeeID, int NewCompanyID)
-{
-    Employee& employee = employees_sorted_by_id.find(EmployeeID);
+void HighTech::HireEmployee(int EmployeeID, int NewCompanyID) {
+    Employee &employee = employees_sorted_by_id.find(EmployeeID);
     RemoveEmployee(EmployeeID);
-    AddEmployee(EmployeeID,NewCompanyID, employee.GetSalary(),employee.GetGrade());
+    AddEmployee(EmployeeID, NewCompanyID, employee.GetSalary(), employee.GetGrade());
 }
 
 void HighTech::GetHighestEarner(int CompanyID, int *EmployeeID) {
-    if (CompanyID < 0)
-    {
+    if (CompanyID < 0) {
         *EmployeeID = employee_id_with_best_salary;
-    }
-    else
-    {
+    } else {
         Company company = companies.find(CompanyID);
         *EmployeeID = company.GetEmployeeIdWithBestSalary();
     }
 }
 
 
-
-
-
-
-
-
-
 Company::Company(int value, int amount_of_employees) : value(value), amount_of_employees(amount_of_employees) {
 
 }
 
-void Company::AddCompanyValue(int valueIncrease)
-{
+void Company::AddCompanyValue(int valueIncrease) {
     value = value + valueIncrease;
 }
 
-int Company::GetCompanyValue()
-{
+int Company::GetCompanyValue() {
     return value;
 }
 
-int Company::GetAmountOfEmployees()
-{
+int Company::GetAmountOfEmployees() {
     return amount_of_employees;
 }
 
@@ -133,49 +111,40 @@ void Company::RemoveEmployee() {
     amount_of_employees--;
 }
 
-Map<Employee> Company::GetCompanyEmployees()
-{
+Map<Employee, SalaryId> Company::GetCompanyEmployees() {
     return company_employees;
 }
 
-int Company::GetEmployeeIdWithBestSalary()
-{
+int Company::GetEmployeeIdWithBestSalary() {
     return 1;
 }
 
 
-
-
-Employee::Employee(int salary, int grade, int company_id, Company* company) : salary(salary), grade(grade), company_id(company_id),  company(company) {
+Employee::Employee(int salary, int grade, int company_id, Company *company) : salary(salary), grade(grade),
+                                                                              company_id(company_id), company(company) {
 
 }
 
-int Employee::GetSalary()
-{
+int Employee::GetSalary() {
     return salary;
 }
 
-void Employee::IncreaseSalary(int valueIncrease)
-{
+void Employee::IncreaseSalary(int valueIncrease) {
     salary = salary + valueIncrease;
 }
 
-void Employee::IncreaseGrade()
-{
+void Employee::IncreaseGrade() {
     grade = grade + 1;
 }
 
-int Employee::GetGrade()
-{
+int Employee::GetGrade() {
     return grade;
 }
 
-int Employee::GetCompanyId()
-{
+int Employee::GetCompanyId() {
     return company_id;
 }
 
-Company*  Employee::GetCompany()
-{
+Company *Employee::GetCompany() {
     return company;
 }

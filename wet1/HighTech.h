@@ -7,45 +7,9 @@
 
 #include "Map.h"
 
-
-class Employee;
-
-class Company {
-private:
-    int value;
-    int amount_of_employees;
-    Map<Employee> company_employees;
-public:
-    Company(int value, int amount_of_employees = 0);
-    void AddCompanyValue(int valueIncrease);
-    void AddNewEmployee();
-    void RemoveEmployee();
-    int GetCompanyValue();
-    int GetAmountOfEmployees();
-    Map<Employee> GetCompanyEmployees();
-    int GetEmployeeIdWithBestSalary();
-};
-
-class Employee {
-private:
-    int salary;
-    int grade;
-    int company_id;
-    Company* company;
-public:
-    Employee(int salary, int grade, int company_id, Company* company);
-    int GetSalary();
-    int GetGrade();
-    int GetCompanyId();
-    Company* GetCompany();
-    void IncreaseSalary(int valueIncrease);
-    void IncreaseGrade();
-    explicit Company(int);
-};
-
 class SalaryId {
     double salary;
-    int id;
+    int id;;
 
     friend bool operator>(SalaryId id1, SalaryId id2) {
         return ((id1.salary == id2.salary && id1.id > id2.id) || id1.salary > id2.salary);
@@ -54,16 +18,66 @@ class SalaryId {
     friend bool operator<(SalaryId id1, SalaryId id2) {
         return !(id1 > id2);
     }
+
+public:
+    SalaryId(double salary, int id) : salary(salary), id(id) {}
+};
+
+
+class Employee;
+
+class Company {
+private:
+    int value;
+    int amount_of_employees;
+    Map<Employee, SalaryId> company_employees;
+public:
+    explicit Company(int value, int amount_of_employees = 0);
+
+    void AddCompanyValue(int valueIncrease);
+
+    void AddNewEmployee();
+
+    void RemoveEmployee();
+
+    int GetCompanyValue();
+
+    int GetAmountOfEmployees();
+
+    Map<Employee, SalaryId> GetCompanyEmployees();
+
+    int GetEmployeeIdWithBestSalary();
+};
+
+class Employee {
+private:
+    int salary;
+    int grade;
+    int company_id;
+    Company *company;
+public:
+    Employee(int salary, int grade, int company_id, Company *company);
+
+    int GetSalary();
+
+    int GetGrade();
+
+    int GetCompanyId();
+
+    Company *GetCompany();
+
+    void IncreaseSalary(int valueIncrease);
+
+    void IncreaseGrade();
+
 };
 
 
 class HighTech {
-    Map<Employee> employees_sorted_by_id;
-    Map<Company> companies;
-    Map<Employee> employees_sorted_by_salary;
-    Employee* employee_with_best_salary;
+    Map<Employee, int> employees_sorted_by_id;
+    Map<Employee, SalaryId> employees_sorted_by_salary;
+    Employee *employee_with_best_salary;
     int employee_id_with_best_salary;
-    Map<Employee, int> employees;
     Map<Company, int> companies;
 public:
     HighTech();
@@ -92,9 +106,10 @@ public:
 
     void GetAllEmployeesBySalary(int companyID, int **Employees, int *NumOfEmployees);
 
-    void GetHighestEarnerInEachCompany(int NumOfCompanies,int **Employees);
+    void GetHighestEarnerInEachCompany(int NumOfCompanies, int **Employees);
 
-    void GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int MaxEmployeeID, int MinSalary, int MinGrade, int *TotalNumOfEmployees, int *NumOfEmployees);
+    void GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int MaxEmployeeID, int MinSalary, int MinGrade,
+                                 int *TotalNumOfEmployees, int *NumOfEmployees);
 
     void Quit();
 };
