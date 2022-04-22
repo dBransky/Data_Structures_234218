@@ -13,7 +13,7 @@ HighTech::HighTech()
 
 void HighTech::AddEmployee(int employee_id, int company_id, int salary, int grade) {
     Company *company = &(companies.find(company_id));
-    Employee new_employee = Employee(company_id, salary, grade, company);
+    Employee new_employee = Employee(salary, grade, company_id, company);
     employees_sorted_by_id.insert(employee_id, new_employee);
     company->AddNewEmployee();
     company->GetCompanyEmployees().insert(SalaryId(salary, employee_id), new_employee);
