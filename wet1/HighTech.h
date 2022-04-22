@@ -7,24 +7,14 @@
 
 #include "Map.h"
 
-class Employee {
-private:
-    int salary;
-    int grade;
-    int company_id;
-public:
-    Employee(int salary, int grade, int company_id);
-    int GetSalary();
-    int GetGrade();
-    int GetCompanyId();
-    void IncreaseSalary(int valueIncrease);
-    void IncreaseGrade();
-};
+
+class Employee;
 
 class Company {
 private:
     int value;
     int amount_of_employees;
+    Map<Employee> company_employees;
 public:
     Company(int value, int amount_of_employees = 0);
     void AddCompanyValue(int valueIncrease);
@@ -32,11 +22,33 @@ public:
     void RemoveEmployee();
     int GetCompanyValue();
     int GetAmountOfEmployees();
+    Map<Employee> GetCompanyEmployees();
+    int GetEmployeeIdWithBestSalary();
 };
 
+class Employee {
+private:
+    int salary;
+    int grade;
+    int company_id;
+    Company* company;
+public:
+    Employee(int salary, int grade, int company_id, Company* company);
+    int GetSalary();
+    int GetGrade();
+    int GetCompanyId();
+    Company* GetCompany();
+    void IncreaseSalary(int valueIncrease);
+    void IncreaseGrade();
+};
+
+
 class HighTech {
-    Map<Employee> employees;
+    Map<Employee> employees_sorted_by_id;
     Map<Company> companies;
+    Map<Employee> employees_sorted_by_salary;
+    Employee* employee_with_best_salary;
+    int employee_id_with_best_salary;
 public:
     HighTech();
 
