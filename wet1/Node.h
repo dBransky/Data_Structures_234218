@@ -6,21 +6,21 @@
 #ifndef DATA_STRUCTURES_234218_NODE_H
 #define DATA_STRUCTURES_234218_NODE_H
 
+#include "Pair.h"
+
 template<class T, class Key>
 class Node {
 public:
     int h_left;
     int h_right;
-    int balance_factor;
-    Key key;
-    T element;
+    int balance_factor{};
+    Pair<T, Key> pair;
     std::shared_ptr<Node> left;
     std::shared_ptr<Node> right;
     std::shared_ptr<Node> father;
 
     Node(std::shared_ptr<Node<T, Key>> left, std::shared_ptr<Node<T, Key>> right, std::shared_ptr<Node<T, Key>> father,
-         Key key,
-         T element);
+         Pair<T, Key> pair);
 
     void UpdateBalanceFactor() {
         if (this->left == NULL)
@@ -37,9 +37,9 @@ public:
 
 template<class T, class Key>
 Node<T, Key>::Node(std::shared_ptr<Node<T, Key>> left, std::shared_ptr<Node<T, Key>> right,
-                   std::shared_ptr<Node<T, Key>> father, Key key, T element):
+                   std::shared_ptr<Node<T, Key>> father, Pair<T, Key> pair):
 
-        left(left), right(right), father(father), key(key), element(element) {
+        left(left), right(right), father(father), pair(pair),h_right(0),h_left(0),balance_factor(0) {
     this->UpdateBalanceFactor();
 
 

@@ -19,6 +19,10 @@ class SalaryId {
         return !(id1 > id2);
     }
 
+    friend bool operator==(SalaryId id1, SalaryId id2) {
+        return (!(id1 > id2)) && (!(id1 < id2));
+    }
+
 public:
     SalaryId(double salary, int id) : salary(salary), id(id) {}
 };

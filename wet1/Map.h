@@ -14,7 +14,7 @@ template<class T, class Key>
 bool CompareKeys(shared_ptr<Node<T, Key>> node, Key key) {
     if (node == NULL)
         return false;
-    return node->key == key;
+    return node->pair.key == key;
 };
 
 
@@ -22,13 +22,14 @@ template<class T, class Key>
 class Map {
 private:
     shared_ptr<Node<T, Key>> head;
+    int amount;
 
     shared_ptr<Node<T, Key>> GetNode(shared_ptr<Node<T, Key>> node, Key key) {
         if (CompareKeys(node, key))
             return node;
-        if (key < node->key)
+        if (key < node->pair.key)
             return GetNode(node->left, key);
-        if (key > node->key)
+        if (key > node->pair.key)
             return GetNode(node->right, key);
         return NULL;
     }
@@ -53,12 +54,12 @@ private:
             return node;
         if (CompareKeys(node->right, key))
             return node;
-        if (key < node->key) {
+        if (key < node->pair.key) {
             if (node->left == NULL)
                 return node;
             return GetNodeFather(node->left, key);
         }
-        if (key > node->key) {
+        if (key > node->pair.key) {
             if (node->right == NULL)
                 return node;
             return GetNodeFather(node->right, key);
@@ -142,8 +143,62 @@ private:
     }
 
 
+    Pair<T, Key> *ArrayFromTree() {
+        auto *array = new Pair<T, Key>[this->amount];
+        int i = 0;
+        StoreInorder(this->head, array, &i);
+        return array;
+    }
+
+    std::shared_ptr<Node<T, Key>>
+    TreeFromArray(std::shared_ptr<Node<T, Key>> father, Pair<T, Key> *array, int first_index, int last_index) {
+        if (first_index > last_index)
+            return NULL;
+        int mid_index = (first_index + last_index) / 2;
+        std::shared_ptr<Node<T, Key>> node = std::shared_ptr<Node<T,Key>>(new Node<T, Key>(NULL, NULL, father, array[mid_index]));
+        node->left = TreeFromArray(node, array, first_index, mid_index - 1);
+        node->right = TreeFromArray(node, array, mid_index + 1, last_index);
+        node->UpdateBalanceFactor();
+        return node;
+
+    }
+
+    Pair<T, Key> *MergeSortedArrays(Pair<T, Key> array1[], Pair<T, Key> array2[],int array1_size,int array2_size) {
+        auto* merged=new Pair<T,Key>[array1_size + array2_size];
+        int i=0, j=0, new_index = 0;
+        while (i < array1_size || j < array2_size) {
+            if (i == array1_size || array1[i].key >= array2[j].key) {
+                merged[new_index] = array2[i];
+                new_index++;
+                i++;
+                continue;
+            } else {
+                merged[new_index] = array1[j];
+                new_index++;
+                j++;
+                continue;
+            }
+
+        }
+        return merged;
+    }
+
+
+    void StoreInorder(shared_ptr<Node<T, Key>> node, Pair<T, Key> arr[], int *index) {
+        if (node == NULL)
+            return;
+        StoreInorder(node->left,arr,index);
+        arr[*index] = node->pair;
+        (*index)++;
+        StoreInorder(node->right,arr,index);
+
+    }
+
+
 public:
     Map();
+
+    Map(Map, Map);
 
     T &find(Key key);
 
@@ -153,12 +208,13 @@ public:
 
     std::shared_ptr<Node<T, Key>> GetMaxId();
 
+
 };
 
 template<class T, class Key>
-T &Map<T, Key>::find(Key x) {
+T &Map<T, Key>::find(Key key) {
     shared_ptr<Node<T, Key>> temp = head;
-    return (GetNode(head, x))->element;
+    return (GetNode(head, key))->pair.element;
 
 
 }
@@ -167,27 +223,30 @@ T &Map<T, Key>::find(Key x) {
 template<class T, class Key>
 Map<T, Key>::Map() {
     head = NULL;
+    amount = 0;
 }
 
 template<class T, class Key>
 void Map<T, Key>::insert(Key key, T element) {
     shared_ptr<Node<T, Key>> father = GetNodeFather(head, key);
+    Pair<T, Key> pair(element, key);
+    amount++;
     if (father == NULL) {
-        head = std::shared_ptr<Node<T, Key>>(new Node<T, Key>(NULL, NULL, NULL, key, element));
+        head = std::shared_ptr<Node<T, Key>>(new Node<T, Key>(NULL, NULL, NULL, pair));
         return;
     }
-    if (father->key > key) {
+    if (father->pair.key > key) {
         if (father->left == NULL) {
-            father->left = std::shared_ptr<Node<T, Key>>(new Node<T, Key>(NULL, NULL, father, key, element));
+            father->left = std::shared_ptr<Node<T, Key>>(new Node<T, Key>(NULL, NULL, father, pair));
         } else {
-            father->left->element = element;
+            father->left->pair.element = element;
         }
         BalanceRoute(father->left);
     } else {
         if (father->right == NULL) {
-            father->right = std::shared_ptr<Node<T, Key>>(new Node<T, Key>(NULL, NULL, father, key, element));
+            father->right = std::shared_ptr<Node<T, Key>>(new Node<T, Key>(NULL, NULL, father, pair));
         } else {
-            father->right->element = element;
+            father->right->pair.element = element;
         }
         BalanceRoute(father->right);
     }
@@ -198,6 +257,7 @@ template<class T, class Key>
 void Map<T, Key>::remove(Key key) {
     shared_ptr<Node<T, Key>> node = GetNode(head, key);
     std::shared_ptr<Node<T, Key>> temp = NULL;
+    amount--;
     if (node->right != NULL && node->left != NULL) {
         if (node->father == NULL) {
             head = node->right;
@@ -242,6 +302,16 @@ void Map<T, Key>::remove(Key key) {
 template<class T, class Key>
 shared_ptr<Node<T, Key>> Map<T, Key>::GetMaxId() {
     return GetRightestNode();
+}
+
+template<class T, class Key>
+Map<T, Key>::Map(Map map1, Map map2) {
+    Pair<T, Key> *array1 = map1.ArrayFromTree();
+    Pair<T, Key> *array2 = map2.ArrayFromTree();
+    Pair<T, Key> *merged = MergeSortedArrays(array1, array2,map1.amount,map2.amount);
+    amount = map1.amount+map2.amount;
+    head = TreeFromArray(NULL, merged, 0, amount - 1);
+
 }
 
 
