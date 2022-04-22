@@ -7,19 +7,39 @@
 
 #include "Map.h"
 
+
+class Employee;
+
+class Company {
+private:
+    int value;
+    int amount_of_employees;
+    Map<Employee> company_employees;
+public:
+    Company(int value, int amount_of_employees = 0);
+    void AddCompanyValue(int valueIncrease);
+    void AddNewEmployee();
+    void RemoveEmployee();
+    int GetCompanyValue();
+    int GetAmountOfEmployees();
+    Map<Employee> GetCompanyEmployees();
+    int GetEmployeeIdWithBestSalary();
+};
+
 class Employee {
 private:
     int salary;
     int grade;
     int company_id;
+    Company* company;
 public:
-    Employee(int salary, int grade, int company_id);
-};
-
-class Company {
-private:
-    int value;
-public:
+    Employee(int salary, int grade, int company_id, Company* company);
+    int GetSalary();
+    int GetGrade();
+    int GetCompanyId();
+    Company* GetCompany();
+    void IncreaseSalary(int valueIncrease);
+    void IncreaseGrade();
     explicit Company(int);
 };
 
@@ -36,21 +56,47 @@ class SalaryId {
     }
 };
 
+
 class HighTech {
+    Map<Employee> employees_sorted_by_id;
+    Map<Company> companies;
+    Map<Employee> employees_sorted_by_salary;
+    Employee* employee_with_best_salary;
+    int employee_id_with_best_salary;
     Map<Employee, int> employees;
     Map<Company, int> companies;
 public:
     HighTech();
 
-    void AddEmployee(int employee_id, int company_id, int salary, int grade);
+    void AddEmployee(int employee_id, int company_id, int salary, int grade); // v
 
-    void RemoveEmployee(int employee_id);
+    void RemoveEmployee(int employee_id); // v
 
-    void RemoveCompany(int company_id);
+    void RemoveCompany(int company_id); // v
 
-    void AddCompany(int company_id, int value);
+    void AddCompany(int company_id, int value); // v
 
+    void GetCompanyInfo(int company_id, int *Value, int *NumEmployees); // v
 
+    void GetEmployeeInfo(int EmployeeId, int *EmployerID, int *Salary, int *Grade); // v
+
+    void IncreaseCompanyValue(int CompanyId, int ValueIncrease); // v
+
+    void PromoteEmployee(int EmployeeID, int SalaryIncrease, int BumpGrade); // v
+
+    void HireEmployee(int EmployeeID, int NewCompanyID);
+
+    void AcquireCompany(int AcquireID, int TargetID, double Factor);
+
+    void GetHighestEarner(int CompanyID, int *EmployeeID);
+
+    void GetAllEmployeesBySalary(int companyID, int **Employees, int *NumOfEmployees);
+
+    void GetHighestEarnerInEachCompany(int NumOfCompanies,int **Employees);
+
+    void GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int MaxEmployeeID, int MinSalary, int MinGrade, int *TotalNumOfEmployees, int *NumOfEmployees);
+
+    void Quit();
 };
 
 #endif //DATA_STRUCTURES_234218_HIGHTECH_H
