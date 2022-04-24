@@ -136,6 +136,15 @@ int Company::GetEmployeeIdWithBestSalary() {
     return 1;
 }
 
+void Company::SetCompanyEmployees(Map<Employee, SalaryId> new_company_employees)
+{
+    company_employees = new_company_employees;
+}
+
+void Company::SetCompanyValue(int new_value)
+{
+    value = new_value;
+}
 
 Employee::Employee(int salary, int grade, int company_id, Company *company) : salary(salary), grade(grade),
                                                                               company_id(company_id), company(company) {
