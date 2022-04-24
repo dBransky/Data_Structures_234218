@@ -22,8 +22,12 @@ class SalaryId {
     friend bool operator==(SalaryId id1, SalaryId id2) {
         return (!(id1 > id2)) && (!(id1 < id2));
     }
+    friend bool operator>=(SalaryId id1, SalaryId id2) {
+            return ((id1.salary == id2.salary && id1.id >= id2.id) || id1.salary >= id2.salary);
+        }
 
 public:
+    SalaryId() {}
     SalaryId(double salary, int id) : salary(salary), id(id) {}
 };
 
@@ -64,6 +68,8 @@ private:
     int company_id;
     Company *company;
 public:
+    Employee();
+
     Employee(int salary, int grade, int company_id, Company *company);
 
     int GetSalary();
@@ -98,6 +104,7 @@ class EmployeeByCompanyId {
 class HighTech {
     Map<Employee, int> employees_sorted_by_id;
     Map<Employee, SalaryId> employees_sorted_by_salary;
+    Map<Employee, EmployeeByCompanyId> best_earning_employees;
     Employee *employee_with_best_salary;
     int employee_id_with_best_salary;
     Map<Company, int> companies;

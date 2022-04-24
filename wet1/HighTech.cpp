@@ -96,7 +96,7 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
         Company &TargetCompany = companies.find(TargetID);
         if (AcquireCompany.GetCompanyValue() >= TargetCompany.GetCompanyValue() * 10)
         {
-            //AcquireCompany.SetCompanyEmployees(Map(AcquireCompany.GetCompanyEmployees(),TargetCompany.GetCompanyEmployees()));
+            AcquireCompany.SetCompanyEmployees(Map<Employee,SalaryId>(AcquireCompany.GetCompanyEmployees(),TargetCompany.GetCompanyEmployees()));
             AcquireCompany.SetCompanyValue((int)(Factor * (AcquireCompany.GetCompanyValue() + TargetCompany.GetCompanyValue())));
 
         }
@@ -144,6 +144,10 @@ void Company::SetCompanyEmployees(Map<Employee, SalaryId> new_company_employees)
 void Company::SetCompanyValue(int new_value)
 {
     value = new_value;
+}
+Employee::Employee()
+{
+
 }
 
 Employee::Employee(int salary, int grade, int company_id, Company *company) : salary(salary), grade(grade),
