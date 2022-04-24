@@ -47,6 +47,10 @@ public:
     Map<Employee, SalaryId> GetCompanyEmployees();
 
     int GetEmployeeIdWithBestSalary();
+    
+    void SetCompanyEmployees(Map<Employee, SalaryId> new_company_employees);
+
+    void SetCompanyValue(int new_value);
 };
 
 class Employee {
