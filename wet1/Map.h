@@ -146,7 +146,7 @@ private:
     Pair<T, Key> *ArrayFromTree() {
         auto *array = new Pair<T, Key>[this->amount];
         int i = 0;
-        StoreInorder(this->head, array, &i);
+        StoreInorder(this->head, array, &i, this->amount);
         return array;
     }
 
@@ -155,7 +155,8 @@ private:
         if (first_index > last_index)
             return NULL;
         int mid_index = (first_index + last_index) / 2;
-        std::shared_ptr<Node<T, Key>> node = std::shared_ptr<Node<T,Key>>(new Node<T, Key>(NULL, NULL, father, array[mid_index]));
+        std::shared_ptr<Node<T, Key>> node = std::shared_ptr<Node<T, Key>>(
+                new Node<T, Key>(NULL, NULL, father, array[mid_index]));
         node->left = TreeFromArray(node, array, first_index, mid_index - 1);
         node->right = TreeFromArray(node, array, mid_index + 1, last_index);
         node->UpdateBalanceFactor();
@@ -163,9 +164,9 @@ private:
 
     }
 
-    Pair<T, Key> *MergeSortedArrays(Pair<T, Key> array1[], Pair<T, Key> array2[],int array1_size,int array2_size) {
-        auto* merged=new Pair<T,Key>[array1_size + array2_size];
-        int i=0, j=0, new_index = 0;
+    Pair<T, Key> *MergeSortedArrays(Pair<T, Key> array1[], Pair<T, Key> array2[], int array1_size, int array2_size) {
+        auto *merged = new Pair<T, Key>[array1_size + array2_size];
+        int i = 0, j = 0, new_index = 0;
         while (i < array1_size || j < array2_size) {
             if (i == array1_size || array1[i].key >= array2[j].key) {
                 merged[new_index] = array2[i];
@@ -184,13 +185,15 @@ private:
     }
 
 
-    void StoreInorder(shared_ptr<Node<T, Key>> node, Pair<T, Key> arr[], int *index) {
+    void StoreInorder(shared_ptr<Node<T, Key>> node, Pair<T, Key> arr[], int *index, int max) {
         if (node == NULL)
             return;
-        StoreInorder(node->left,arr,index);
+        if (*index == max)
+            return;
+        StoreInorder(node->left, arr, index,max);
         arr[*index] = node->pair;
         (*index)++;
-        StoreInorder(node->right,arr,index);
+        StoreInorder(node->right, arr, index,max);
 
     }
 
@@ -207,6 +210,8 @@ public:
     void remove(Key key);
 
     std::shared_ptr<Node<T, Key>> GetMaxId();
+
+    Pair<T,Key>* GetFirstNum(int NumToReturn);
 
 
 };
@@ -308,10 +313,19 @@ template<class T, class Key>
 Map<T, Key>::Map(Map map1, Map map2) {
     Pair<T, Key> *array1 = map1.ArrayFromTree();
     Pair<T, Key> *array2 = map2.ArrayFromTree();
-    Pair<T, Key> *merged = MergeSortedArrays(array1, array2,map1.amount,map2.amount);
-    amount = map1.amount+map2.amount;
+    Pair<T, Key> *merged = MergeSortedArrays(array1, array2, map1.amount, map2.amount);
+    amount = map1.amount + map2.amount;
     head = TreeFromArray(NULL, merged, 0, amount - 1);
 
+}
+
+
+template<class T, class Key>
+Pair<T,Key>* Map<T, Key>::GetFirstNum(int NumToReturn) {
+    auto *array = new Pair<T, Key>[NumToReturn];
+    int i = 0;
+    StoreInorder(this->head, array, &i,NumToReturn);
+    return array;
 }
 
 

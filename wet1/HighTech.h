@@ -76,6 +76,20 @@ public:
 
 };
 
+class EmployeeByCompanyId {
+    std::shared_ptr<Employee> employee;
+    EmployeeByCompanyId(std::shared_ptr<Employee> employee):
+        employee(employee){
+    }
+    friend bool operator>(EmployeeByCompanyId& employee1,EmployeeByCompanyId& employee2){
+        return employee1.employee->GetCompany()>employee2.employee->GetCompany();
+    }
+    friend bool operator<(EmployeeByCompanyId& employee1,EmployeeByCompanyId& employee2){
+        return !(employee1>employee2);
+    }
+
+};
+
 
 class HighTech {
     Map<Employee, int> employees_sorted_by_id;
