@@ -86,6 +86,23 @@ void HighTech::GetHighestEarner(int CompanyID, int *EmployeeID) {
     }
 }
 
+void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
+    if (AcquireID <= 0 || TargetID <= 0)
+    {
+        // throw InvalidInput();
+    }
+    else {
+        Company &AcquireCompany = companies.find(AcquireID);
+        Company &TargetCompany = companies.find(TargetID);
+        if (AcquireCompany.GetCompanyValue() >= TargetCompany.GetCompanyValue() * 10)
+        {
+            //AcquireCompany.SetCompanyEmployees(Map(AcquireCompany.GetCompanyEmployees(),TargetCompany.GetCompanyEmployees()));
+            AcquireCompany.SetCompanyValue((int)(Factor * (AcquireCompany.GetCompanyValue() + TargetCompany.GetCompanyValue())));
+
+        }
+    }
+}
+
 
 Company::Company(int value, int amount_of_employees) : value(value), amount_of_employees(amount_of_employees) {
 
