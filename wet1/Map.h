@@ -17,6 +17,15 @@ bool CompareKeys(shared_ptr<Node<T, Key>> node, Key key) {
     return node->pair.key == key;
 };
 
+class MapError : public std::exception {
+};
+
+class KeyAlreadyExists : public MapError {
+};
+
+class KeyDoesntExist : public MapError {
+};
+
 
 template<class T, class Key>
 class Map {
@@ -185,16 +194,29 @@ private:
     }
 
 
-    void StoreInorder(shared_ptr<Node<T, Key>> node, Pair<T, Key> arr[], int *index, int max) {
+    void StoreInorder(shared_ptr<Node<T, Key>> node, Pair<T, Key> arr[], int *index, int max, Key max_key = NULL) {
         if (node == NULL)
             return;
         if (*index == max)
             return;
-        StoreInorder(node->left, arr, index,max);
+        StoreInorder(node->left, arr, index, max);
+        if (max_key != NULL && node->pair.key > max_key)
+            return;
         arr[*index] = node->pair;
         (*index)++;
-        StoreInorder(node->right, arr, index,max);
+        StoreInorder(node->right, arr, index, max);
 
+    }
+
+    int CountInorder(shared_ptr<Node<T, Key>> node, Key max_key = NULL) {
+        if (node == NULL)
+            return 0;
+        int sum = CountInorder(node->left);
+        if (max_key != NULL && node->pair.key > max_key)
+            return sum;
+        sum++;
+        sum += CountInorder(node->right);
+        return sum;
     }
 
 
@@ -211,7 +233,9 @@ public:
 
     std::shared_ptr<Node<T, Key>> GetMaxId();
 
-    Pair<T,Key>* GetFirstNum(int NumToReturn);
+    Pair<T, Key> *GetFirstNum(int NumToReturn);
+
+    Pair<T, Key> *GetObjectsFromKey(Key min_key, Key max_key, int *size);
 
 
 };
@@ -219,7 +243,10 @@ public:
 template<class T, class Key>
 T &Map<T, Key>::find(Key key) {
     shared_ptr<Node<T, Key>> temp = head;
-    return (GetNode(head, key))->pair.element;
+    shared_ptr<Node<T, Key>> result = GetNode(head, key);
+    if (result == NULL)
+        throw KeyDoesntExist();
+    return result->pair.element;
 
 
 }
@@ -234,6 +261,8 @@ Map<T, Key>::Map() {
 template<class T, class Key>
 void Map<T, Key>::insert(Key key, T element) {
     shared_ptr<Node<T, Key>> father = GetNodeFather(head, key);
+    if (father->left->pair.key == key || father->right->pair.key == key)
+        throw KeyAlreadyExists();
     Pair<T, Key> pair(element, key);
     amount++;
     if (father == NULL) {
@@ -261,6 +290,8 @@ void Map<T, Key>::insert(Key key, T element) {
 template<class T, class Key>
 void Map<T, Key>::remove(Key key) {
     shared_ptr<Node<T, Key>> node = GetNode(head, key);
+    if (node == NULL)
+        throw KeyDoesntExist();
     std::shared_ptr<Node<T, Key>> temp = NULL;
     amount--;
     if (node->right != NULL && node->left != NULL) {
@@ -305,8 +336,13 @@ void Map<T, Key>::remove(Key key) {
 }
 
 template<class T, class Key>
-shared_ptr<Node<T, Key>> Map<T, Key>::GetMaxId() {
-    return GetRightestNode();
+shared_ptr<Node<T, Key>> Map<T, Key>::GetMaxId()
+{
+    if (head == NULL)
+    {
+        return NULL;
+    }
+    return GetRightestNode(head);
 }
 
 template<class T, class Key>
@@ -321,10 +357,24 @@ Map<T, Key>::Map(Map map1, Map map2) {
 
 
 template<class T, class Key>
-Pair<T,Key>* Map<T, Key>::GetFirstNum(int NumToReturn) {
+Pair<T, Key> *Map<T, Key>::GetFirstNum(int NumToReturn) {
     auto *array = new Pair<T, Key>[NumToReturn];
     int i = 0;
-    StoreInorder(this->head, array, &i,NumToReturn);
+    StoreInorder(this->head, array, &i, NumToReturn);
+    return array;
+}
+
+template<class T, class Key>
+Pair<T, Key> *Map<T, Key>::GetObjectsFromKey(Key min_key, Key max_key, int *size) {
+    std::shared_ptr<Node<T, Key>> node = find(min_key);
+    std::shared_ptr<Node<T, Key>> father = node;
+    while (IsLeftSon(father, father->father)) {
+        father = father->father;
+    }
+    *size = CountInorder(father, max_key);
+    auto *array = new Pair<T, Key>[*size];
+    int i = 0;
+    StoreInorder(father, array, &i, INT16_MAX, max_key);
     return array;
 }
 
