@@ -213,7 +213,7 @@ private:
             return;
         FreePostOrder(node->left);
         FreePostOrder(node->right);
-        free(node);
+        node->pair.element.~T();
 
     }
 
@@ -360,8 +360,8 @@ Map<T, Key>::Map(Map map1, Map map2) {
     Pair<T, Key> *array1 = map1.ArrayFromTree();
     Pair<T, Key> *array2 = map2.ArrayFromTree();
     Pair<T, Key> *merged = MergeSortedArrays(array1, array2, map1.amount, map2.amount);
-    free(array1);
-    free(array2);
+    delete(array1);
+    delete(array2);
     amount = map1.amount + map2.amount;
     head = TreeFromArray(NULL, merged, 0, amount - 1);
 
@@ -378,7 +378,7 @@ Pair<T, Key> *Map<T, Key>::GetFirstNum(int NumToReturn) {
 
 template<class T, class Key>
 Pair<T, Key> *Map<T, Key>::GetObjectsFromKey(Key min_key, Key max_key, int *size) {
-    std::shared_ptr<Node<T, Key>> node = find(min_key);
+    std::shared_ptr<Node<T, Key>> node = GetNode(head,min_key);
     std::shared_ptr<Node<T, Key>> father = node;
     while (IsLeftSon(father, father->father)) {
         father = father->father;
@@ -392,7 +392,7 @@ Pair<T, Key> *Map<T, Key>::GetObjectsFromKey(Key min_key, Key max_key, int *size
 
 template<class T, class Key>
 Map<T, Key>::~Map() {
-    FreePostOrder();
+    FreePostOrder(head);
 }
 
 
