@@ -7,11 +7,14 @@
 
 #include "Map.h"
 
-class Exceptions : public std::exception {};
+class Exceptions : public std::exception {
+};
 
-class Failure : public Exceptions {};
+class Failure : public Exceptions {
+};
 
-class InvalidInput : public Exceptions {};
+class InvalidInput : public Exceptions {
+};
 
 
 class SalaryId {
@@ -29,12 +32,14 @@ class SalaryId {
     friend bool operator==(SalaryId id1, SalaryId id2) {
         return (!(id1 > id2)) && (!(id1 < id2));
     }
+
     friend bool operator>=(SalaryId id1, SalaryId id2) {
-            return ((id1.salary == id2.salary && id1.id >= id2.id) || id1.salary >= id2.salary);
-        }
+        return ((id1.salary == id2.salary && id1.id >= id2.id) || id1.salary >= id2.salary);
+    }
 
 public:
     SalaryId() {}
+
     SalaryId(double salary, int id) : salary(salary), id(id) {}
 };
 
@@ -46,9 +51,9 @@ private:
     int id;
     int value;
     int amount_of_employees;
-    Employee* best_salary_employee;
-    Map<Employee*, SalaryId> company_employees;
-    Map<Employee*, int> employees_id;
+    Employee *best_salary_employee;
+    Map<Employee *, SalaryId> company_employees;
+    Map<Employee *, int> employees_id;
 public:
     Company(int id, int value);
 
@@ -60,23 +65,23 @@ public:
 
     int GetCompanyValue();
 
-    Employee* GetBestSalaryEmployee();
+    Employee *GetBestSalaryEmployee();
 
     int GetCompanyId();
 
     int GetAmountOfEmployees();
 
-    Map<Employee*, SalaryId>& GetCompanyEmployees();
+    Map<Employee *, SalaryId> &GetCompanyEmployees();
 
-    Map<Employee*, int>&  GetCompanyIDEmployees();
+    Map<Employee *, int> &GetCompanyIDEmployees();
 
     int GetEmployeeIdWithBestSalary();
-    
-    void SetCompanyEmployees(Map<Employee*, SalaryId> new_company_employees);
+
+    void SetCompanyEmployees(Map<Employee *, SalaryId> new_company_employees);
 
     void SetCompanyValue(int new_value);
 
-    void SetCompanyBestEmployee(Employee* new_employee);
+    void SetCompanyBestEmployee(Employee *new_employee);
 };
 
 class Employee {
@@ -84,7 +89,7 @@ private:
     int id;
     int salary;
     int grade;
-    Company* company;
+    Company *company;
 public:
     Employee();
 
@@ -109,34 +114,39 @@ public:
 class EmployeeByCompanyId {
     std::shared_ptr<Employee> employee;
 public:
-    EmployeeByCompanyId(){};
-    EmployeeByCompanyId(std::shared_ptr<Employee> employee):
-        employee(employee){
+    EmployeeByCompanyId() {};
+
+    EmployeeByCompanyId(std::shared_ptr<Employee> employee) :
+            employee(employee) {
     }
-    friend bool operator>(EmployeeByCompanyId& employee1,EmployeeByCompanyId& employee2){
-        return employee1.employee->GetCompany()>employee2.employee->GetCompany();
+
+    friend bool operator>(EmployeeByCompanyId &employee1, EmployeeByCompanyId &employee2) {
+        return employee1.employee->GetCompany() > employee2.employee->GetCompany();
     }
-    friend bool operator<(EmployeeByCompanyId& employee1,EmployeeByCompanyId& employee2){
-        return !(employee1>employee2);
+
+    friend bool operator<(EmployeeByCompanyId &employee1, EmployeeByCompanyId &employee2) {
+        return !(employee1 > employee2);
     }
-    friend bool operator==(EmployeeByCompanyId& employee1,EmployeeByCompanyId& employee2){
+
+    friend bool operator==(EmployeeByCompanyId &employee1, EmployeeByCompanyId &employee2) {
         return !(employee1 > employee2) && !(employee1 < employee2);
     }
 };
 
 
-class HighTech
-{
+class HighTech {
     int total_amount_of_employees;
     int amount_of_companies_with_at_least_one_employee;
-    Map<Employee*, int> employees_sorted_by_id;
-    Map<Employee*, SalaryId> employees_sorted_by_salary;
-    Map<Employee*, EmployeeByCompanyId> best_earning_employees;
+    Map<Employee *, int> employees_sorted_by_id;
+    Map<Employee *, SalaryId> employees_sorted_by_salary;
+    Map<Employee *, EmployeeByCompanyId> best_earning_employees;
     Employee *employee_with_best_salary;
-    Map<Company*, int> companies;
+    Map<Company *, int> companies;
 
 public:
     HighTech();
+
+    ~HighTech()=default;
 
     void AddCompany(int CompanyId, int Value); // v
 
@@ -172,9 +182,9 @@ public:
 
     void Quit();
 
-    void UpdateInCompany(Employee* employee, Company* company);
+    void UpdateInCompany(Employee *employee, Company *company);
 
-    void UpdateInHighTech(Employee* employee);
+    void UpdateInHighTech(Employee *employee);
 };
 
 #endif //DATA_STRUCTURES_234218_HIGHTECH_H
