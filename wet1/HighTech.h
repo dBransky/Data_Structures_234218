@@ -16,7 +16,7 @@ class InvalidInput : public Exceptions {};
 
 class SalaryId {
     double salary;
-    int id;;
+    int id;
 
     friend bool operator>(SalaryId id1, SalaryId id2) {
         return ((id1.salary == id2.salary && id1.id > id2.id) || id1.salary > id2.salary);
@@ -48,6 +48,7 @@ private:
     int amount_of_employees;
     Employee* best_salary_employee;
     Map<Employee*, SalaryId> company_employees;
+    Map<Employee*, int> employees_id;
 public:
     Company(int id, int value);
 
@@ -66,6 +67,8 @@ public:
     int GetAmountOfEmployees();
 
     Map<Employee*, SalaryId>& GetCompanyEmployees();
+
+    Map<Employee*, int>&  GetCompanyIDEmployees();
 
     int GetEmployeeIdWithBestSalary();
     
@@ -106,6 +109,7 @@ public:
 class EmployeeByCompanyId {
     std::shared_ptr<Employee> employee;
 public:
+    EmployeeByCompanyId(){};
     EmployeeByCompanyId(std::shared_ptr<Employee> employee):
         employee(employee){
     }

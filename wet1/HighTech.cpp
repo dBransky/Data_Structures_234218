@@ -84,6 +84,7 @@ void HighTech::AddEmployee(int EmployeeId, int CompanyID, int Salary, int Grade)
         employees_sorted_by_id.insert(EmployeeId, new_employee); // O(log n)
         employees_sorted_by_salary.insert(SalaryId(Salary, EmployeeId), new_employee); // O(log n)
         company->GetCompanyEmployees().insert(SalaryId(Salary, EmployeeId), new_employee); // O(log n)
+        company->GetCompanyIDEmployees().insert(EmployeeId,new_employee);
         company->AddNewEmployee(); // O(1)
         UpdateInCompany(new_employee, new_employee->GetCompany());
         UpdateInHighTech(new_employee);
@@ -118,6 +119,7 @@ void HighTech::RemoveEmployee(int employee_id)
         if (employee->GetCompany()->GetBestSalaryEmployee()->GetId() == employee_id)
         {
             employee->GetCompany()->GetCompanyEmployees().remove(SalaryId(employee->GetSalary(), employee_id));
+            employee->GetCompany()->GetCompanyIDEmployees().remove(employee_id);
             employee->GetCompany()->SetCompanyBestEmployee(
                     reinterpret_cast<Employee *>((employee->GetCompany()->GetCompanyEmployees().GetMaxId()).get()));
             best_earning_employees.remove(EmployeeByCompanyId(shared_ptr<Employee>(employee)));
@@ -416,7 +418,7 @@ void HighTech::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int Max
     }
     if (CompanyID < 0)
     {
-        Pair<Employee*, EmployeeByCompanyId>* pair_list = employees_sorted_by_id.GetObjectsFromKey(MinEmployeeID, MaxEmployeeID, TotalNumOfEmployees);
+        Pair<Employee*, int>* pair_list = employees_sorted_by_id.GetObjectsFromKey(MinEmployeeID, MaxEmployeeID, TotalNumOfEmployees);
         int count = 0;
         for (int i = 0; i < *TotalNumOfEmployees; i++)
         {
@@ -432,7 +434,7 @@ void HighTech::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int Max
         try
         {
             Company *company = companies.find(CompanyID);
-            Pair<Employee *, EmployeeByCompanyId> *pair_list = company->GetCompanyEmployees().GetObjectsFromKey(MinEmployeeID, MaxEmployeeID, TotalNumOfEmployees);
+            Pair<Employee *, int> *pair_list = company->GetCompanyIDEmployees().GetObjectsFromKey(MinEmployeeID, MaxEmployeeID, TotalNumOfEmployees);
             int count = 0;
             for (int i = 0; i < *TotalNumOfEmployees; i++) {
                 if (pair_list->element->GetSalary() >= MinSalary && pair_list->element->GetGrade() >= MinGrade) {
@@ -461,7 +463,7 @@ void HighTech::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int Max
 
 // Compnay
 
-Company::Company(int id, int value) : id(id), value(value), amount_of_employees(0), company_employees(), best_salary_employee(NULL) {}
+Company::Company(int id, int value) : id(id), value(value), amount_of_employees(0), company_employees(), employees_id(), best_salary_employee(NULL) {}
 
 void Company::AddCompanyValue(int valueIncrease) {
     value = value + valueIncrease;
@@ -487,6 +489,11 @@ void Company::AddNewEmployee() {
 
 void Company::RemoveEmployee() {
     amount_of_employees--;
+}
+
+Map<Employee*, int>&  Company::GetCompanyIDEmployees()
+{
+    return employees_id;
 }
 
 Map<Employee*, SalaryId>& Company::GetCompanyEmployees() {
