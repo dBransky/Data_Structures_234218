@@ -208,6 +208,14 @@ private:
         StoreInorder(node->right, arr, index, max, max_key);
 
     }
+    void FreePostOrder(shared_ptr<Node<T, Key>> node) {
+        if (node == NULL)
+            return;
+        FreePostOrder(node->left);
+        FreePostOrder(node->right);
+        free(node);
+
+    }
 
     int CountInorder(shared_ptr<Node<T, Key>> node, Key max_key = NULL) {
         if (node == NULL)
@@ -227,6 +235,7 @@ public:
     Map();
 
     Map(Map, Map);
+    ~Map();
 
     T &find(Key key);
 
@@ -351,6 +360,8 @@ Map<T, Key>::Map(Map map1, Map map2) {
     Pair<T, Key> *array1 = map1.ArrayFromTree();
     Pair<T, Key> *array2 = map2.ArrayFromTree();
     Pair<T, Key> *merged = MergeSortedArrays(array1, array2, map1.amount, map2.amount);
+    free(array1);
+    free(array2);
     amount = map1.amount + map2.amount;
     head = TreeFromArray(NULL, merged, 0, amount - 1);
 
@@ -377,6 +388,11 @@ Pair<T, Key> *Map<T, Key>::GetObjectsFromKey(Key min_key, Key max_key, int *size
     int i = 0;
     StoreInorder(father, array, &i, INT16_MAX, &max_key);
     return array;
+}
+
+template<class T, class Key>
+Map<T, Key>::~Map() {
+    FreePostOrder();
 }
 
 
