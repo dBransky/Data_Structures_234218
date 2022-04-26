@@ -217,7 +217,7 @@ private:
 
     }
 
-    int CountInorder(shared_ptr<Node<T, Key>> node, Key max_key = NULL) {
+    int CountInorder(shared_ptr<Node<T, Key>> node, Key *max_key = NULL) {
         if (node == NULL)
             return 0;
         int sum = CountInorder(node->left);
@@ -383,7 +383,7 @@ Pair<T, Key> *Map<T, Key>::GetObjectsFromKey(Key min_key, Key max_key, int *size
     while (IsLeftSon(father, father->father)) {
         father = father->father;
     }
-    *size = CountInorder(father, max_key);
+    *size = CountInorder(father, &max_key);
     auto *array = new Pair<T, Key>[*size];
     int i = 0;
     StoreInorder(father, array, &i, INT16_MAX, &max_key);
