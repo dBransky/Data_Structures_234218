@@ -336,8 +336,13 @@ void Map<T, Key>::remove(Key key) {
 }
 
 template<class T, class Key>
-shared_ptr<Node<T, Key>> Map<T, Key>::GetMaxId() {
-    return GetRightestNode();
+shared_ptr<Node<T, Key>> Map<T, Key>::GetMaxId()
+{
+    if (head == NULL)
+    {
+        return NULL;
+    }
+    return GetRightestNode(head);
 }
 
 template<class T, class Key>

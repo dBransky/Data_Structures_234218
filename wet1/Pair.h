@@ -11,8 +11,6 @@ public:
     T element;
     Key key;
     Pair(){
-        element=NULL;
-        key=NULL;
     };
     Pair(T element, Key key) : element(element), key(key) {};
 };
