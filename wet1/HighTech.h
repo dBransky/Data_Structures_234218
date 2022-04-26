@@ -48,6 +48,7 @@ private:
     int amount_of_employees;
     Employee* best_salary_employee;
     Map<Employee*, SalaryId> company_employees;
+    Map<Employee*, int> employees_id;
 public:
     Company(int id, int value);
 
@@ -66,6 +67,8 @@ public:
     int GetAmountOfEmployees();
 
     Map<Employee*, SalaryId>& GetCompanyEmployees();
+
+    Map<Employee*, int>&  GetCompanyIDEmployees();
 
     int GetEmployeeIdWithBestSalary();
     
