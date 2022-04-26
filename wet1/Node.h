@@ -13,7 +13,7 @@ class Node {
 public:
     int h_left;
     int h_right;
-    int balance_factor{};
+    int balance_factor;
     Pair<T, Key> pair;
     std::shared_ptr<Node> left;
     std::shared_ptr<Node> right;
