@@ -26,11 +26,11 @@ class SalaryId {
     }
 
     friend bool operator<(SalaryId id1, SalaryId id2) {
-        return !(id1 > id2);
+        return !(id1 > id2) && !(id1 == id2);
     }
 
     friend bool operator==(SalaryId id1, SalaryId id2) {
-        return (!(id1 > id2)) && (!(id1 < id2));
+        return (id1.salary == id2.salary) && (id1.id == id2.id);
     }
 
     friend bool operator>=(SalaryId id1, SalaryId id2) {
@@ -93,7 +93,7 @@ private:
 public:
     Employee();
 
-    Employee(int salary, int grade, int company_id, Company *company);
+    Employee(int salary, int grade, int employee_id, Company *company);
 
     int GetSalary();
 
@@ -146,7 +146,7 @@ class HighTech {
 public:
     HighTech();
 
-    ~HighTech()=default;
+    ~HighTech() = default;
 
     void AddCompany(int CompanyId, int Value); // v
 

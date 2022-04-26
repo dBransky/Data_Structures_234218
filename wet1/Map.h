@@ -34,6 +34,8 @@ private:
     int amount;
 
     shared_ptr<Node<T, Key>> GetNode(shared_ptr<Node<T, Key>> node, Key key) {
+        if (node==NULL)
+            return NULL;
         if (CompareKeys(node, key))
             return node;
         if (key < node->pair.key)
@@ -177,7 +179,7 @@ private:
         auto *merged = new Pair<T, Key>[array1_size + array2_size];
         int i = 0, j = 0, new_index = 0;
         while (i < array1_size || j < array2_size) {
-            if (i == array1_size || array1[i].key >= array2[j].key) {
+            if (j == array2_size || array1[i].key >= array2[j].key) {
                 merged[new_index] = array2[i];
                 new_index++;
                 i++;
@@ -256,7 +258,6 @@ public:
 
 template<class T, class Key>
 T &Map<T, Key>::find(Key key) {
-    shared_ptr<Node<T, Key>> temp = head;
     shared_ptr<Node<T, Key>> result = GetNode(head, key);
     if (result == NULL)
         throw KeyDoesntExist();
