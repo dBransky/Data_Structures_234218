@@ -208,6 +208,7 @@ private:
         StoreInorder(node->right, arr, index, max, max_key);
 
     }
+
     void FreePostOrder(shared_ptr<Node<T, Key>> node) {
         if (node == NULL)
             return;
@@ -235,6 +236,7 @@ public:
     Map();
 
     Map(Map, Map);
+
     ~Map();
 
     T &find(Key key);
@@ -273,8 +275,10 @@ Map<T, Key>::Map() {
 template<class T, class Key>
 void Map<T, Key>::insert(Key key, T element) {
     shared_ptr<Node<T, Key>> father = GetNodeFather(head, key);
-    if (father->left->pair.key == key || father->right->pair.key == key)
-        throw KeyAlreadyExists();
+    if (father != NULL) {
+        if ((father->left!=NULL&&father->left->pair.key == key) || (father->right!=NULL&&father->right->pair.key == key))
+            throw KeyAlreadyExists();
+    }
     Pair<T, Key> pair(element, key);
     amount++;
     if (father == NULL) {
@@ -360,8 +364,8 @@ Map<T, Key>::Map(Map map1, Map map2) {
     Pair<T, Key> *array1 = map1.ArrayFromTree();
     Pair<T, Key> *array2 = map2.ArrayFromTree();
     Pair<T, Key> *merged = MergeSortedArrays(array1, array2, map1.amount, map2.amount);
-    delete(array1);
-    delete(array2);
+    delete (array1);
+    delete (array2);
     amount = map1.amount + map2.amount;
     head = TreeFromArray(NULL, merged, 0, amount - 1);
 
@@ -378,7 +382,7 @@ Pair<T, Key> *Map<T, Key>::GetFirstNum(int NumToReturn) {
 
 template<class T, class Key>
 Pair<T, Key> *Map<T, Key>::GetObjectsFromKey(Key min_key, Key max_key, int *size) {
-    std::shared_ptr<Node<T, Key>> node = GetNode(head,min_key);
+    std::shared_ptr<Node<T, Key>> node = GetNode(head, min_key);
     std::shared_ptr<Node<T, Key>> father = node;
     while (IsLeftSon(father, father->father)) {
         father = father->father;
