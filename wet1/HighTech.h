@@ -7,6 +7,13 @@
 
 #include "Map.h"
 
+class Exceptions : public std::exception {};
+
+class Failure : public Exceptions {};
+
+class InvalidInput : public Exceptions {};
+
+
 class SalaryId {
     double salary;
     int id;;
@@ -36,11 +43,13 @@ class Employee;
 
 class Company {
 private:
+    int id;
     int value;
     int amount_of_employees;
-    Map<Employee, SalaryId> company_employees;
+    Employee* best_salary_employee;
+    Map<Employee*, SalaryId> company_employees;
 public:
-    explicit Company(int value, int amount_of_employees = 0);
+    Company(int id, int value);
 
     void AddCompanyValue(int valueIncrease);
 
@@ -50,23 +59,29 @@ public:
 
     int GetCompanyValue();
 
+    Employee* GetBestSalaryEmployee();
+
+    int GetCompanyId();
+
     int GetAmountOfEmployees();
 
-    Map<Employee, SalaryId> GetCompanyEmployees();
+    Map<Employee*, SalaryId>& GetCompanyEmployees();
 
     int GetEmployeeIdWithBestSalary();
     
-    void SetCompanyEmployees(Map<Employee, SalaryId> new_company_employees);
+    void SetCompanyEmployees(Map<Employee*, SalaryId> new_company_employees);
 
     void SetCompanyValue(int new_value);
+
+    void SetCompanyBestEmployee(Employee* new_employee);
 };
 
 class Employee {
 private:
+    int id;
     int salary;
     int grade;
-    int company_id;
-    Company *company;
+    Company* company;
 public:
     Employee();
 
@@ -78,6 +93,8 @@ public:
 
     int GetCompanyId();
 
+    int GetId();
+
     Company *GetCompany();
 
     void IncreaseSalary(int valueIncrease);
@@ -88,6 +105,7 @@ public:
 
 class EmployeeByCompanyId {
     std::shared_ptr<Employee> employee;
+public:
     EmployeeByCompanyId(std::shared_ptr<Employee> employee):
         employee(employee){
     }
@@ -97,27 +115,35 @@ class EmployeeByCompanyId {
     friend bool operator<(EmployeeByCompanyId& employee1,EmployeeByCompanyId& employee2){
         return !(employee1>employee2);
     }
-
+    friend bool operator==(EmployeeByCompanyId& employee1,EmployeeByCompanyId& employee2){
+        return !(employee1 > employee2) && !(employee1 < employee2);
+    }
 };
 
 
-class HighTech {
-    Map<Employee, int> employees_sorted_by_id;
-    Map<Employee, SalaryId> employees_sorted_by_salary;
-    Map<Employee, EmployeeByCompanyId> best_earning_employees;
+class HighTech
+{
+    int total_amount_of_employees;
+    int amount_of_companies_with_at_least_one_employee;
+    Map<Employee*, int> employees_sorted_by_id;
+    Map<Employee*, SalaryId> employees_sorted_by_salary;
+    Map<Employee*, EmployeeByCompanyId> best_earning_employees;
     Employee *employee_with_best_salary;
-    int employee_id_with_best_salary;
-    Map<Company, int> companies;
+    Map<Company*, int> companies;
+
 public:
     HighTech();
 
-    void AddEmployee(int employee_id, int company_id, int salary, int grade); // v
+    void AddCompany(int CompanyId, int Value); // v
+
+    void AddEmployee(int EmployeeId, int CompanyID, int Salary, int Grade); // v
+
+
 
     void RemoveEmployee(int employee_id); // v
 
     void RemoveCompany(int company_id); // v
 
-    void AddCompany(int company_id, int value); // v
 
     void GetCompanyInfo(int company_id, int *Value, int *NumEmployees); // v
 
@@ -141,6 +167,10 @@ public:
                                  int *TotalNumOfEmployees, int *NumOfEmployees);
 
     void Quit();
+
+    void UpdateInCompany(Employee* employee, Company* company);
+
+    void UpdateInHighTech(Employee* employee);
 };
 
 #endif //DATA_STRUCTURES_234218_HIGHTECH_H
