@@ -253,5 +253,6 @@ StatusType GetNumEmployeesMatching(void *DS, int CompanyID, int MinEmployeeID, i
 }
 
 void Quit(void **DS) {
+    delete((HighTech*)*DS);
     *DS = NULL;
 }

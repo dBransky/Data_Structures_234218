@@ -225,8 +225,15 @@ private:
             return;
         FreePostOrder(node->left);
         FreePostOrder(node->right);
-        node->pair.element.~T();
-//        delete (node);
+        delete (node);
+    }
+
+    void NULLInorder(Node<T, Key> *node) {
+        if (node == NULL)
+            return;
+        NULLInorder(node->left);
+        NULLInorder(node->right);
+        node->pair.element = NULL;
     }
 
     int CountInorder(Node<T, Key> *node, Key *max_key = NULL) {
@@ -246,8 +253,6 @@ private:
 public:
     Map();
 
-    Map(Map, Map);
-
     ~Map();
 
     T &find(Key key);
@@ -255,6 +260,8 @@ public:
     void insert(Key key, T element);
 
     void remove(Key key);
+
+    void merge(Map &);
 
     T GetMaxId();
 
@@ -392,18 +399,6 @@ T Map<T, Key>::GetMaxId() {
     return GetRightestNode(head)->pair.element;
 }
 
-template<class T, class Key>
-Map<T, Key>::Map(Map map1, Map map2) {
-    Pair<T, Key> *array1 = map1.ArrayFromTree();
-    Pair<T, Key> *array2 = map2.ArrayFromTree();
-    Pair<T, Key> *merged = MergeSortedArrays(array1, array2, map1.amount, map2.amount);
-    delete (array1);
-    delete (array2);
-    amount = map1.amount + map2.amount;
-    head = TreeFromArray(NULL, merged, 0, amount - 1);
-
-}
-
 
 template<class T, class Key>
 Pair<T, Key> *Map<T, Key>::GetFirstNum(int NumToReturn) {
@@ -433,6 +428,27 @@ Pair<T, Key> *Map<T, Key>::GetObjectsFromKey(Key min_key, Key max_key, int *size
 template<class T, class Key>
 Map<T, Key>::~Map() {
     FreePostOrder(head);
+}
+
+template<class T, class Key>
+void Map<T, Key>::merge(Map &map) {
+    Pair<T, Key> *array1 = map.ArrayFromTree();
+    Pair<T, Key> *array2 = this->ArrayFromTree();
+    Pair<T, Key> *merged = MergeSortedArrays(array1, array2, map.amount, this->amount);
+    for (int i = 0; i < map.amount; ++i) {
+        array1[i].element = NULL;
+    }
+    for (int i = 0; i < this->amount; ++i) {
+        array2[i].element = NULL;
+    }
+    NULLInorder(map.head);
+    NULLInorder(this->head);
+    delete[] array1;
+    delete[] array2;
+    amount = map.amount + this->amount;
+    head = TreeFromArray(NULL, merged, 0, amount - 1);
+    delete[] merged;
+
 }
 
 
