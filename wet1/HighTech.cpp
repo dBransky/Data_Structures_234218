@@ -263,6 +263,11 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
                     (int) (Factor * (AcquireCompany->GetCompanyValue() + TargetCompany->GetCompanyValue())));
             AcquireCompany->SetCompanyAmountOfEmployees(TargetCompany->GetAmountOfEmployees());
             companies.remove(TargetCompany->GetCompanyId());
+            Pair<Employee *, SalaryId> *pair_list = AcquireCompany->GetCompanyEmployees().GetFirstNum(AcquireCompany->GetAmountOfEmployees());
+            for (int i = 0; i < AcquireCompany->GetAmountOfEmployees(); i++)
+            {
+                pair_list[i].element->SetCompany(AcquireCompany);
+            }
             if (AcquireCompany->GetAmountOfEmployees() > 0) {
                 Employee *best_emp = AcquireCompany->GetCompanyEmployees().GetMaxId();
                 AcquireCompany->SetCompanyBestEmployee(best_emp);
@@ -506,4 +511,9 @@ Company *Employee::GetCompany() {
 
 int Employee::GetId() {
     return id;
+}
+
+void Employee::SetCompany(Company* new_company)
+{
+    company = new_company;
 }

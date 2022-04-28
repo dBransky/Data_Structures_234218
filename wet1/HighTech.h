@@ -113,6 +113,8 @@ public:
 
     void IncreaseGrade();
 
+    void SetCompany(Company* new_company);
+
 };
 
 class EmployeeByCompanyId {
