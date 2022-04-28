@@ -182,74 +182,76 @@ StatusType AcquireCompany(void *DS, int AcquirerID, int TargetID, double Factor)
     return SUCCESS;
 }
 
-StatusType GetHighestEarner(void *DS, int CompanyID, int *EmployeeID){
+StatusType GetHighestEarner(void *DS, int CompanyID, int *EmployeeID) {
     if (DS == NULL) return INVALID_INPUT;
-    try{
-        ((HighTech*)DS)->GetHighestEarner(CompanyID,EmployeeID);
+    try {
+        ((HighTech *) DS)->GetHighestEarner(CompanyID, EmployeeID);
     }
-    catch (InvalidInput){
+    catch (InvalidInput) {
         return INVALID_INPUT;
     }
-    catch (Failure){
+    catch (Failure) {
         return FAILURE;
     }
-    catch(std::bad_alloc) {
+    catch (std::bad_alloc) {
         return ALLOCATION_ERROR;
     }
     return SUCCESS;
 }
 
-StatusType GetAllEmployeesBySalary(void *DS, int CompanyID, int **Employees, int *NumOfEmployees){
+StatusType GetAllEmployeesBySalary(void *DS, int CompanyID, int **Employees, int *NumOfEmployees) {
     if (DS == NULL) return INVALID_INPUT;
-    try{
-        ((HighTech*)DS)->GetAllEmployeesBySalary(CompanyID,Employees,NumOfEmployees);
+    try {
+        ((HighTech *) DS)->GetAllEmployeesBySalary(CompanyID, Employees, NumOfEmployees);
     }
-    catch (InvalidInput){
+    catch (InvalidInput) {
         return INVALID_INPUT;
     }
-    catch (Failure){
+    catch (Failure) {
         return FAILURE;
     }
-    catch(std::bad_alloc) {
+    catch (std::bad_alloc) {
         return ALLOCATION_ERROR;
     }
     return SUCCESS;
 }
 
-StatusType GetHighestEarnerInEachCompany(void *DS, int NumOfCompanies, int **Employees){
+StatusType GetHighestEarnerInEachCompany(void *DS, int NumOfCompanies, int **Employees) {
     if (DS == NULL) return INVALID_INPUT;
-    try{
-        ((HighTech*)DS)->GetHighestEarnerInEachCompany(NumOfCompanies,Employees);
+    try {
+        ((HighTech *) DS)->GetHighestEarnerInEachCompany(NumOfCompanies, Employees);
     }
-    catch (InvalidInput){
+    catch (InvalidInput) {
         return INVALID_INPUT;
     }
-    catch (Failure){
+    catch (Failure) {
         return FAILURE;
     }
-    catch(std::bad_alloc) {
+    catch (std::bad_alloc) {
         return ALLOCATION_ERROR;
     }
     return SUCCESS;
 }
 
 StatusType GetNumEmployeesMatching(void *DS, int CompanyID, int MinEmployeeID, int MaxEmployeeId,
-                                   int MinSalary, int MinGrade, int *TotalNumOfEmployees, int *NumOfEmployees){
+                                   int MinSalary, int MinGrade, int *TotalNumOfEmployees, int *NumOfEmployees) {
     if (DS == NULL) return INVALID_INPUT;
-    try{
-        ((HighTech*)DS)->GetNumEmployeesMatching(CompanyID,MinEmployeeID,MaxEmployeeId,MinSalary,MinGrade,TotalNumOfEmployees,NumOfEmployees);
+    try {
+        ((HighTech *) DS)->GetNumEmployeesMatching(CompanyID, MinEmployeeID, MaxEmployeeId, MinSalary, MinGrade,
+                                                   TotalNumOfEmployees, NumOfEmployees);
     }
-    catch (InvalidInput){
+    catch (InvalidInput) {
         return INVALID_INPUT;
     }
-    catch (Failure){
+    catch (Failure) {
         return FAILURE;
     }
-    catch(std::bad_alloc) {
+    catch (std::bad_alloc) {
         return ALLOCATION_ERROR;
     }
     return SUCCESS;
 }
-void Quit(void** DS){
-    ((HighTech*)DS)->~HighTech();
+
+void Quit(void **DS) {
+    *DS = NULL;
 }

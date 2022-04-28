@@ -109,10 +109,12 @@ void HighTech::RemoveEmployee(int employee_id) {
             employee->GetCompany()->SetCompanyBestEmployee(
                     ((employee->GetCompany()->GetCompanyEmployees().GetMaxId())));
             best_earning_employees.remove(EmployeeByCompanyId((employee)));
-            best_earning_employees.insert(
-                    EmployeeByCompanyId((employee->GetCompany()->GetBestSalaryEmployee())),
-                    employee);
-            employee_with_best_salary = (best_earning_employees.GetMaxId());
+            if (employee->GetCompany()->GetAmountOfEmployees() != 1) {
+                best_earning_employees.insert(
+                        EmployeeByCompanyId((employee->GetCompany()->GetBestSalaryEmployee())),
+                        employee);
+                employee_with_best_salary = (best_earning_employees.GetMaxId());
+            }
         } else {
             employee->GetCompany()->GetCompanyEmployees().remove(SalaryId(employee->GetSalary(), employee_id));
         }
@@ -263,9 +265,9 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
                     (int) (Factor * (AcquireCompany->GetCompanyValue() + TargetCompany->GetCompanyValue())));
             AcquireCompany->SetCompanyAmountOfEmployees(TargetCompany->GetAmountOfEmployees());
             companies.remove(TargetCompany->GetCompanyId());
-            Pair<Employee *, SalaryId> *pair_list = AcquireCompany->GetCompanyEmployees().GetFirstNum(AcquireCompany->GetAmountOfEmployees());
-            for (int i = 0; i < AcquireCompany->GetAmountOfEmployees(); i++)
-            {
+            Pair<Employee *, SalaryId> *pair_list = AcquireCompany->GetCompanyEmployees().GetFirstNum(
+                    AcquireCompany->GetAmountOfEmployees());
+            for (int i = 0; i < AcquireCompany->GetAmountOfEmployees(); i++) {
                 pair_list[i].element->SetCompany(AcquireCompany);
             }
             if (AcquireCompany->GetAmountOfEmployees() > 0) {
@@ -513,7 +515,6 @@ int Employee::GetId() {
     return id;
 }
 
-void Employee::SetCompany(Company* new_company)
-{
+void Employee::SetCompany(Company *new_company) {
     company = new_company;
 }

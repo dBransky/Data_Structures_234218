@@ -226,7 +226,7 @@ private:
         FreePostOrder(node->left);
         FreePostOrder(node->right);
         node->pair.element.~T();
-
+        delete(node);
     }
 
     int CountInorder(Node<T, Key> *node, Key *max_key = NULL) {
