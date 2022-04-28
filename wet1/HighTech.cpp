@@ -316,7 +316,7 @@ void HighTech::GetAllEmployeesBySalary(int companyID, int **Employees, int *NumO
             Pair<Employee *, SalaryId> *pair_list = company->GetCompanyEmployees().GetFirstNum(
                     company->GetAmountOfEmployees());
             for (int i = 0; i < company->GetAmountOfEmployees(); i++) {
-                emp[i] = pair_list[i].element->GetId();
+                emp[company->GetAmountOfEmployees() - 1 - i] = pair_list[i].element->GetId();
             }
             *Employees = emp;
             *NumOfEmployees = company->GetAmountOfEmployees();
