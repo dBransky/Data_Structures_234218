@@ -17,9 +17,7 @@ void HighTech::UpdateInCompany(Employee *employee, Company *company) {
                 best_earning_employees.insert(EmployeeByCompanyId(shared_ptr<Employee>(employee)), employee);
                 company->SetCompanyBestEmployee(employee);
             }
-        }
-        else
-        {
+        } else {
             best_earning_employees.insert(EmployeeByCompanyId(shared_ptr<Employee>(employee)), employee);
             company->SetCompanyBestEmployee(employee);
         }
@@ -39,9 +37,7 @@ void HighTech::UpdateInHighTech(Employee *employee) {
             if (max_salary < current_salary || (current_salary == max_salary && current_id < max_id)) {
                 employee_with_best_salary = employee;
             }
-        }
-        else
-        {
+        } else {
             employee_with_best_salary = employee;
         }
 
@@ -111,12 +107,12 @@ void HighTech::RemoveEmployee(int employee_id) {
             employee->GetCompany()->GetCompanyEmployees().remove(SalaryId(employee->GetSalary(), employee_id));
             employee->GetCompany()->GetCompanyIDEmployees().remove(employee_id);
             employee->GetCompany()->SetCompanyBestEmployee(
-                    reinterpret_cast<Employee *>((employee->GetCompany()->GetCompanyEmployees().GetMaxId()).get()));
+                    ((employee->GetCompany()->GetCompanyEmployees().GetMaxId())));
             best_earning_employees.remove(EmployeeByCompanyId(shared_ptr<Employee>(employee)));
             best_earning_employees.insert(
                     EmployeeByCompanyId(shared_ptr<Employee>(employee->GetCompany()->GetBestSalaryEmployee())),
                     employee);
-            employee_with_best_salary = reinterpret_cast<Employee *>(best_earning_employees.GetMaxId().get());
+            employee_with_best_salary = (best_earning_employees.GetMaxId());
         } else {
             employee->GetCompany()->GetCompanyEmployees().remove(SalaryId(employee->GetSalary(), employee_id));
         }
@@ -216,16 +212,16 @@ void HighTech::PromoteEmployee(int EmployeeID, int SalaryIncrease, int BumpGrade
             employee->IncreaseGrade();
         }
         Company *company = employee->GetCompany();
-        company->GetCompanyEmployees().remove(SalaryId(employee->GetSalary()-SalaryIncrease, EmployeeID));
+        company->GetCompanyEmployees().remove(SalaryId(employee->GetSalary() - SalaryIncrease, EmployeeID));
         company->GetCompanyEmployees().insert(SalaryId(employee->GetSalary(), employee->GetId()), employee);
-        employees_sorted_by_salary.remove(SalaryId(employee->GetSalary()-SalaryIncrease, EmployeeID));
+        employees_sorted_by_salary.remove(SalaryId(employee->GetSalary() - SalaryIncrease, EmployeeID));
         employees_sorted_by_salary.insert(SalaryId(employee->GetSalary(), employee->GetId()), employee);
         Employee *best_emp = company->GetBestSalaryEmployee();
         if (best_emp->GetSalary() < employee->GetSalary() ||
             (best_emp->GetSalary() == employee->GetSalary() && best_emp->GetId() > employee->GetId())) {
             employee->GetCompany()->GetCompanyEmployees().remove(SalaryId(employee->GetSalary(), EmployeeID));
             employee->GetCompany()->SetCompanyBestEmployee(
-                    reinterpret_cast<Employee *>((employee->GetCompany()->GetCompanyEmployees().GetMaxId()).get()));
+                    ((employee->GetCompany()->GetCompanyEmployees().GetMaxId())));
         }
         if (employee_with_best_salary->GetSalary() < employee->GetSalary() ||
             (employee_with_best_salary->GetSalary() == employee->GetSalary() &&
@@ -234,7 +230,7 @@ void HighTech::PromoteEmployee(int EmployeeID, int SalaryIncrease, int BumpGrade
             best_earning_employees.insert(
                     EmployeeByCompanyId(shared_ptr<Employee>(employee->GetCompany()->GetBestSalaryEmployee())),
                     employee);
-            employee_with_best_salary = reinterpret_cast<Employee *>(best_earning_employees.GetMaxId().get());
+            employee_with_best_salary = (best_earning_employees.GetMaxId());
         }
     }
     catch (KeyDoesntExist &k) {
@@ -248,14 +244,14 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
     }
     try {
         Company *AcquireCompany = companies.find(AcquireID);
-        if (AcquireCompany->GetAmountOfEmployees() > 0)
-        {
-            best_earning_employees.remove(EmployeeByCompanyId(shared_ptr<Employee>(AcquireCompany->GetBestSalaryEmployee())));
+        if (AcquireCompany->GetAmountOfEmployees() > 0) {
+            best_earning_employees.remove(
+                    EmployeeByCompanyId(shared_ptr<Employee>(AcquireCompany->GetBestSalaryEmployee())));
         }
         Company *TargetCompany = companies.find(TargetID);
-        if (TargetCompany->GetAmountOfEmployees() > 0)
-        {
-            best_earning_employees.remove(EmployeeByCompanyId(shared_ptr<Employee>(TargetCompany->GetBestSalaryEmployee())));)
+        if (TargetCompany->GetAmountOfEmployees() > 0) {
+            best_earning_employees.remove(
+                    EmployeeByCompanyId(shared_ptr<Employee>(TargetCompany->GetBestSalaryEmployee())));
         }
         if (AcquireCompany->GetCompanyValue() >= TargetCompany->GetCompanyValue() * 10) {
             if (TargetCompany->GetAmountOfEmployees() > 0) {
@@ -267,15 +263,12 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
                     (int) (Factor * (AcquireCompany->GetCompanyValue() + TargetCompany->GetCompanyValue())));
             AcquireCompany->SetCompanyAmountOfEmployees(TargetCompany->GetAmountOfEmployees());
             companies.remove(TargetCompany->GetCompanyId());
-            if (AcquireCompany->GetAmountOfEmployees() > 0)
-            {
-                Employee* best_emp = reinterpret_cast<Employee *>(AcquireCompany->GetCompanyEmployees().GetMaxId().get());
+            if (AcquireCompany->GetAmountOfEmployees() > 0) {
+                Employee *best_emp = AcquireCompany->GetCompanyEmployees().GetMaxId();
                 AcquireCompany->SetCompanyBestEmployee(best_emp);
                 best_earning_employees.insert(EmployeeByCompanyId(shared_ptr<Employee>(best_emp)), best_emp);
             }
-        }
-        else
-        {
+        } else {
             throw Failure();
         }
     }
@@ -467,13 +460,11 @@ int Company::GetCompanyId() {
     return id;
 }
 
-int Company::GetCompanyAmountOfEmployees()
-{
+int Company::GetCompanyAmountOfEmployees() {
     return amount_of_employees;
 }
 
-void Company::SetCompanyAmountOfEmployees(int add_amount)
-{
+void Company::SetCompanyAmountOfEmployees(int add_amount) {
     amount_of_employees = add_amount + amount_of_employees;
 }
 

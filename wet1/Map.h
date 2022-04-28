@@ -34,7 +34,7 @@ private:
     int amount;
 
     shared_ptr<Node<T, Key>> GetNode(shared_ptr<Node<T, Key>> node, Key key) {
-        if (node==NULL)
+        if (node == NULL)
             return NULL;
         if (CompareKeys(node, key))
             return node;
@@ -247,7 +247,7 @@ public:
 
     void remove(Key key);
 
-    std::shared_ptr<Node<T, Key>> GetMaxId();
+    T GetMaxId();
 
     Pair<T, Key> *GetFirstNum(int NumToReturn);
 
@@ -277,7 +277,8 @@ template<class T, class Key>
 void Map<T, Key>::insert(Key key, T element) {
     shared_ptr<Node<T, Key>> father = GetNodeFather(head, key);
     if (father != NULL) {
-        if ((father->left!=NULL&&father->left->pair.key == key) || (father->right!=NULL&&father->right->pair.key == key))
+        if ((father->left != NULL && father->left->pair.key == key) ||
+            (father->right != NULL && father->right->pair.key == key))
             throw KeyAlreadyExists();
     }
     Pair<T, Key> pair(element, key);
@@ -341,23 +342,27 @@ void Map<T, Key>::remove(Key key) {
         BalanceRoute(temp);
         return;
     }
-    if (node->right == NULL)
-        temp = node->left;
-    if (node->left == NULL)
-        temp = node->right;
-    if (IsLeftSon(node, node->father)) {
-        node->father->left = temp;
-    } else
-        node->father->right = temp;
+    if (node->right == NULL && node->left == NULL)
+        temp = node->father;
+    else {
+        if (node->right == NULL)
+            temp = node->left;
+        if (node->left == NULL)
+            temp = node->right;
+        if (IsLeftSon(node, node->father)) {
+            node->father->left = temp;
+        } else
+            node->father->right = temp;
+    }
     BalanceRoute(temp);
 }
 
 template<class T, class Key>
-shared_ptr<Node<T, Key>> Map<T, Key>::GetMaxId() {
+T Map<T, Key>::GetMaxId() {
     if (head == NULL) {
         return NULL;
     }
-    return GetRightestNode(head);
+    return GetRightestNode(head)->pair.element;
 }
 
 template<class T, class Key>

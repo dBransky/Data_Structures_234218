@@ -125,15 +125,19 @@ public:
     }
 
     friend bool operator>(EmployeeByCompanyId &employee1, EmployeeByCompanyId &employee2) {
-        return employee1.employee->GetCompany() > employee2.employee->GetCompany();
+        return employee1.employee->GetCompanyId() > employee2.employee->GetCompanyId();
+    }
+
+    friend bool operator>=(EmployeeByCompanyId &employee1, EmployeeByCompanyId &employee2) {
+        return (employee1 > employee2) || (employee1 == employee2);
     }
 
     friend bool operator<(EmployeeByCompanyId &employee1, EmployeeByCompanyId &employee2) {
-        return !(employee1 > employee2);
+        return !(employee1 >= employee2);
     }
 
     friend bool operator==(EmployeeByCompanyId &employee1, EmployeeByCompanyId &employee2) {
-        return !(employee1 > employee2) && !(employee1 < employee2);
+        return employee1.employee->GetCompanyId() == employee2.employee->GetCompanyId();
     }
 };
 
