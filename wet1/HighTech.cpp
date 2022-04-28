@@ -53,6 +53,7 @@ void HighTech::UpdateInHighTech(Employee *employee) {
 HighTech::HighTech() : employees_sorted_by_id(), companies(), employees_sorted_by_salary(), best_earning_employees() {
     employee_with_best_salary = NULL;
     total_amount_of_employees = 0;
+    amount_of_companies_with_at_least_one_employee = 0;
 }
 
 void HighTech::AddCompany(int CompanyId, int Value) {
@@ -247,7 +248,15 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
     }
     try {
         Company *AcquireCompany = companies.find(AcquireID);
+        if (AcquireCompany->GetAmountOfEmployees() > 0)
+        {
+            best_earning_employees.remove(EmployeeByCompanyId(shared_ptr<Employee>(AcquireCompany->GetBestSalaryEmployee())));
+        }
         Company *TargetCompany = companies.find(TargetID);
+        if (TargetCompany->GetAmountOfEmployees() > 0)
+        {
+            best_earning_employees.remove(EmployeeByCompanyId(shared_ptr<Employee>(TargetCompany->GetBestSalaryEmployee())));)
+        }
         if (AcquireCompany->GetCompanyValue() >= TargetCompany->GetCompanyValue() * 10) {
             if (TargetCompany->GetAmountOfEmployees() > 0) {
                 amount_of_companies_with_at_least_one_employee--;
@@ -258,7 +267,15 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
                     (int) (Factor * (AcquireCompany->GetCompanyValue() + TargetCompany->GetCompanyValue())));
             AcquireCompany->SetCompanyAmountOfEmployees(TargetCompany->GetAmountOfEmployees());
             companies.remove(TargetCompany->GetCompanyId());
-        } else {
+            if (AcquireCompany->GetAmountOfEmployees() > 0)
+            {
+                Employee* best_emp = reinterpret_cast<Employee *>(AcquireCompany->GetCompanyEmployees().GetMaxId().get());
+                AcquireCompany->SetCompanyBestEmployee(best_emp);
+                best_earning_employees.insert(EmployeeByCompanyId(shared_ptr<Employee>(best_emp)), best_emp);
+            }
+        }
+        else
+        {
             throw Failure();
         }
     }
