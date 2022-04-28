@@ -5,13 +5,12 @@
 #include <memory>
 #include "Node.h"
 
-using std::shared_ptr;
 
 #ifndef DATA_STRUCTURES_234218_Map_H
 #define DATA_STRUCTURES_234218_Map_H
 
 template<class T, class Key>
-bool CompareKeys(shared_ptr<Node<T, Key>> node, Key key) {
+bool CompareKeys(Node<T, Key> *node, Key key) {
     if (node == NULL)
         return false;
     return node->pair.key == key;
@@ -30,10 +29,10 @@ class KeyDoesntExist : public MapError {
 template<class T, class Key>
 class Map {
 private:
-    shared_ptr<Node<T, Key>> head;
+    Node<T, Key> *head;
     int amount;
 
-    shared_ptr<Node<T, Key>> GetNode(shared_ptr<Node<T, Key>> node, Key key) {
+    Node<T, Key> *GetNode(Node<T, Key> *node, Key key) {
         if (node == NULL)
             return NULL;
         if (CompareKeys(node, key))
@@ -45,19 +44,19 @@ private:
         return NULL;
     }
 
-    std::shared_ptr<Node<T, Key>> GetLeftestNode(std::shared_ptr<Node<T, Key>> node) {
+    Node<T, Key> *GetLeftestNode(Node<T, Key> *node) {
         if (node->left == NULL)
             return node;
         return GetLeftestNode(node->left);
     }
 
-    std::shared_ptr<Node<T, Key>> GetRightestNode(std::shared_ptr<Node<T, Key>> node) {
+    Node<T, Key> *GetRightestNode(Node<T, Key> *node) {
         if (node->right == NULL)
             return node;
         return GetRightestNode(node->right);
     }
 
-    shared_ptr<Node<T, Key>> GetNodeFather(shared_ptr<Node<T, Key>> node, Key key) {
+    Node<T, Key> *GetNodeFather(Node<T, Key> *node, Key key) {
         if (node == NULL) {
             return NULL;
         }
@@ -78,7 +77,7 @@ private:
         return NULL;
     }
 
-    void BalanceRoute(shared_ptr<Node<T, Key>> updated_node) {
+    void BalanceRoute(Node<T, Key> *updated_node) {
         while (updated_node != NULL) {
             updated_node->UpdateBalanceFactor();
             if (updated_node->balance_factor < -1 || updated_node->balance_factor > 1) {
@@ -96,18 +95,24 @@ private:
         }
     }
 
-    bool IsLeftSon(shared_ptr<Node<T, Key>> son, shared_ptr<Node<T, Key>> father) {
+    bool IsLeftSon(Node<T, Key> *son, Node<T, Key> *father) {
+        if (father == NULL || son == NULL)
+            return false;
         return father->left == son;
     }
 
-    void LL_Roll(shared_ptr<Node<T, Key>> node) {
-        shared_ptr<Node<T, Key>> temp = node->left;
-        shared_ptr<Node<T, Key>> father = node->father;
+    void LL_Roll(Node<T, Key> *node) {
+        Node<T, Key> *temp = node->left;
+        Node<T, Key> *father = node->father;
         node->left = temp->right;
+        if (node->left != NULL)
+            temp->right->father = node->left;
         temp->right = node;
-        if (father == NULL)
+        node->father = temp;
+        if (father == NULL) {
             head = temp;
-        else {
+            head->father = NULL;
+        } else {
             if (IsLeftSon(node, father)) {
                 father->left = temp;
             } else {
@@ -119,13 +124,17 @@ private:
         temp->UpdateBalanceFactor();
     }
 
-    void RR_Roll(shared_ptr<Node<T, Key>> node) {
-        shared_ptr<Node<T, Key>> temp = node->right;
-        shared_ptr<Node<T, Key>> father = node->father;
+    void RR_Roll(Node<T, Key> *node) {
+        Node<T, Key> *temp = node->right;
+        Node<T, Key> *father = node->father;
         node->right = temp->left;
+        if (node->right != NULL)
+            temp->left->father = node->right;
         temp->left = node;
+        node->father = temp;
         if (father == NULL) {
             head = temp;
+            head->father = NULL;
         } else {
             if (IsLeftSon(node, father)) {
                 father->left = temp;
@@ -140,14 +149,14 @@ private:
 
     }
 
-    void RL_Roll(shared_ptr<Node<T, Key>> node) {
+    void RL_Roll(Node<T, Key> *node) {
         LL_Roll(node->right);
         RR_Roll(node);
 
 
     }
 
-    void LR_Roll(shared_ptr<Node<T, Key>> node) {
+    void LR_Roll(Node<T, Key> *node) {
         RR_Roll(node->left);
         LL_Roll(node);
 
@@ -161,13 +170,13 @@ private:
         return array;
     }
 
-    std::shared_ptr<Node<T, Key>>
-    TreeFromArray(std::shared_ptr<Node<T, Key>> father, Pair<T, Key> *array, int first_index, int last_index) {
+    Node<T, Key> *
+    TreeFromArray(Node<T, Key> *father, Pair<T, Key> *array, int first_index, int last_index) {
         if (first_index > last_index)
             return NULL;
         int mid_index = (first_index + last_index) / 2;
-        std::shared_ptr<Node<T, Key>> node = std::shared_ptr<Node<T, Key>>(
-                new Node<T, Key>(NULL, NULL, father, array[mid_index]));
+        auto *node =
+                new Node<T, Key>(NULL, NULL, father, array[mid_index]);
         node->left = TreeFromArray(node, array, first_index, mid_index - 1);
         node->right = TreeFromArray(node, array, mid_index + 1, last_index);
         node->UpdateBalanceFactor();
@@ -195,7 +204,7 @@ private:
         return merged;
     }
 
-    void StoreInorder(shared_ptr<Node<T, Key>> node, Pair<T, Key> arr[], int *index, int max, Key *max_key = NULL) {
+    void StoreInorder(Node<T, Key> *node, Pair<T, Key> arr[], int *index, int max, Key *max_key = NULL) {
         if (node == NULL)
             return;
         if (*index == max)
@@ -211,7 +220,7 @@ private:
 
     }
 
-    void FreePostOrder(shared_ptr<Node<T, Key>> node) {
+    void FreePostOrder(Node<T, Key> *node) {
         if (node == NULL)
             return;
         FreePostOrder(node->left);
@@ -220,7 +229,7 @@ private:
 
     }
 
-    int CountInorder(shared_ptr<Node<T, Key>> node, Key *max_key = NULL) {
+    int CountInorder(Node<T, Key> *node, Key *max_key = NULL) {
         if (node == NULL)
             return 0;
         int sum = CountInorder(node->left);
@@ -258,7 +267,7 @@ public:
 
 template<class T, class Key>
 T &Map<T, Key>::find(Key key) {
-    shared_ptr<Node<T, Key>> result = GetNode(head, key);
+    Node<T, Key> *result = GetNode(head, key);
     if (result == NULL)
         throw KeyDoesntExist();
     return result->pair.element;
@@ -275,7 +284,7 @@ Map<T, Key>::Map() {
 
 template<class T, class Key>
 void Map<T, Key>::insert(Key key, T element) {
-    shared_ptr<Node<T, Key>> father = GetNodeFather(head, key);
+    Node<T, Key> *father = GetNodeFather(head, key);
     if (father != NULL) {
         if ((father->left != NULL && father->left->pair.key == key) ||
             (father->right != NULL && father->right->pair.key == key))
@@ -284,53 +293,52 @@ void Map<T, Key>::insert(Key key, T element) {
     Pair<T, Key> pair(element, key);
     amount++;
     if (father == NULL) {
-        head = std::shared_ptr<Node<T, Key>>(new Node<T, Key>(NULL, NULL, NULL, pair));
+        head = new Node<T, Key>(NULL, NULL, NULL, pair);
         return;
     }
     if (father->pair.key > key) {
         if (father->left == NULL) {
-            father->left = std::shared_ptr<Node<T, Key>>(new Node<T, Key>(NULL, NULL, father, pair));
+            father->left = new Node<T, Key>(NULL, NULL, father, pair);
         } else {
             father->left->pair.element = element;
         }
         BalanceRoute(father->left);
     } else {
         if (father->right == NULL) {
-            father->right = std::shared_ptr<Node<T, Key>>(new Node<T, Key>(NULL, NULL, father, pair));
+            father->right = new Node<T, Key>(NULL, NULL, father, pair);
         } else {
             father->right->pair.element = element;
         }
         BalanceRoute(father->right);
     }
-
 }
 
 template<class T, class Key>
 void Map<T, Key>::remove(Key key) {
-    shared_ptr<Node<T, Key>> node = GetNode(head, key);
+    Node<T, Key> *node = GetNode(head, key);
     if (node == NULL)
         throw KeyDoesntExist();
-    std::shared_ptr<Node<T, Key>> temp = NULL;
+    Node<T, Key> *temp = NULL;
     amount--;
     if (node->right != NULL && node->left != NULL) {
         if (node->father == NULL) {
             head = node->right;
             head->father = NULL;
             temp = node->left;
-            std::shared_ptr<Node<T, Key>> leftest = GetLeftestNode(node->right);
+            Node<T, Key> *leftest = GetLeftestNode(node->right);
             leftest->left = node->left;
             node->left->father = leftest;
         } else {
             if (IsLeftSon(node, node->father)) {
                 temp = node->left;
-                std::shared_ptr<Node<T, Key>> leftest = GetLeftestNode(node->right);
+                Node<T, Key> *leftest = GetLeftestNode(node->right);
                 leftest->left = temp;
                 temp->father = leftest;
                 node->father->left = node->right;
                 node->right->father = node->father;
             } else {
                 temp = node->right;
-                std::shared_ptr<Node<T, Key>> rightest = GetRightestNode(node->left);
+                Node<T, Key> *rightest = GetRightestNode(node->left);
                 rightest->right = temp;
                 temp->father = rightest;
                 node->father->right = node->left;
@@ -342,18 +350,37 @@ void Map<T, Key>::remove(Key key) {
         BalanceRoute(temp);
         return;
     }
-    if (node->right == NULL && node->left == NULL)
+    if (node->right == NULL && node->left == NULL) {
         temp = node->father;
-    else {
+        if (node->father == NULL) {
+            head = temp;
+        } else {
+            if (IsLeftSon(node, node->father))
+                node->father->left = NULL;
+            else
+                node->father->right = NULL;
+        }
+    } else {
         if (node->right == NULL)
             temp = node->left;
         if (node->left == NULL)
             temp = node->right;
-        if (IsLeftSon(node, node->father)) {
-            node->father->left = temp;
-        } else
-            node->father->right = temp;
+        if (node->father == NULL) {
+            head = temp;
+            temp->father = NULL;
+        } else {
+            if (IsLeftSon(node, node->father)) {
+                {
+                    node->father->left = temp;
+                    temp->father = node->father;
+                }
+            } else {
+                node->father->right = temp;
+                temp->father = node->father;
+            }
+        }
     }
+    delete (node);
     BalanceRoute(temp);
 }
 
@@ -388,8 +415,11 @@ Pair<T, Key> *Map<T, Key>::GetFirstNum(int NumToReturn) {
 
 template<class T, class Key>
 Pair<T, Key> *Map<T, Key>::GetObjectsFromKey(Key min_key, Key max_key, int *size) {
-    std::shared_ptr<Node<T, Key>> node = GetNode(head, min_key);
-    std::shared_ptr<Node<T, Key>> father = node;
+    Node<T, Key> *father = GetNodeFather(head, min_key);
+    if (father->pair.key < min_key) {
+        *size = 0;
+        return NULL;
+    }
     while (IsLeftSon(father, father->father)) {
         father = father->father;
     }

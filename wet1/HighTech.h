@@ -118,11 +118,11 @@ public:
 };
 
 class EmployeeByCompanyId {
-    std::shared_ptr<Employee> employee;
+    Employee* employee;
 public:
     EmployeeByCompanyId() {};
 
-    EmployeeByCompanyId(std::shared_ptr<Employee> employee) :
+    EmployeeByCompanyId(Employee* employee) :
             employee(employee) {
     }
 
