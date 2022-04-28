@@ -65,6 +65,10 @@ public:
 
     int GetCompanyValue();
 
+    int GetCompanyAmountOfEmployees();
+
+    void SetCompanyAmountOfEmployees(int add_amount);
+
     Employee *GetBestSalaryEmployee();
 
     int GetCompanyId();

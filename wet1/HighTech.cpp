@@ -256,6 +256,7 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
                                                                           TargetCompany->GetCompanyEmployees()));
             AcquireCompany->SetCompanyValue(
                     (int) (Factor * (AcquireCompany->GetCompanyValue() + TargetCompany->GetCompanyValue())));
+            AcquireCompany->SetCompanyAmountOfEmployees(TargetCompany->GetAmountOfEmployees());
             companies.remove(TargetCompany->GetCompanyId());
         } else {
             throw Failure();
@@ -449,6 +450,15 @@ int Company::GetCompanyId() {
     return id;
 }
 
+int Company::GetCompanyAmountOfEmployees()
+{
+    return amount_of_employees;
+}
+
+void Company::SetCompanyAmountOfEmployees(int add_amount)
+{
+    amount_of_employees = add_amount + amount_of_employees;
+}
 
 
 // Employee
