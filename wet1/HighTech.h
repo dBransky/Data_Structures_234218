@@ -147,6 +147,7 @@ public:
 class HighTech {
     int total_amount_of_employees;
     int amount_of_companies_with_at_least_one_employee;
+    int amount_of_companies;
     Map<Employee *, int> employees_sorted_by_id;
     Map<Employee *, SalaryId> employees_sorted_by_salary;
     Map<Employee *, EmployeeByCompanyId> best_earning_employees;
@@ -156,7 +157,7 @@ class HighTech {
 public:
     HighTech();
 
-    ~HighTech() = default;
+    ~HighTech();
 
     void AddCompany(int CompanyId, int Value); // v
 

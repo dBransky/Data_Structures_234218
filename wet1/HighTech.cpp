@@ -50,7 +50,23 @@ HighTech::HighTech() : employees_sorted_by_id(), companies(), employees_sorted_b
     employee_with_best_salary = NULL;
     total_amount_of_employees = 0;
     amount_of_companies_with_at_least_one_employee = 0;
+    amount_of_companies = 0;
 }
+
+HighTech::~HighTech()
+{
+    Pair<Company *, int> *companies_list = companies.GetFirstNum(amount_of_companies);
+    Pair<Employee *, int> *employees = employees_sorted_by_id.GetFirstNum(total_amount_of_employees);
+    for (int i = 0; i < amount_of_companies; i++)
+    {
+        delete(companies_list[i].element);
+    }
+    for (int i = 0; i < total_amount_of_employees; i++)
+    {
+        delete(employees[i].element);
+    }
+}
+
 
 void HighTech::AddCompany(int CompanyId, int Value) {
     if (CompanyId <= 0 || Value <= 0) {
@@ -59,6 +75,7 @@ void HighTech::AddCompany(int CompanyId, int Value) {
     auto *new_company = new Company(CompanyId, Value);
     try {
         companies.insert(CompanyId, new_company); // O(log k)
+        amount_of_companies++;
     }
     catch (KeyAlreadyExists &k) {
         delete (new_company);
@@ -123,6 +140,7 @@ void HighTech::RemoveEmployee(int employee_id) {
         if (employee->GetCompany()->GetAmountOfEmployees() == 0) {
             amount_of_companies_with_at_least_one_employee--;
         }
+        delete(employee);
     }
     catch (KeyDoesntExist &k) {
         throw Failure();
@@ -139,6 +157,8 @@ void HighTech::RemoveCompany(int company_id) {
             throw Failure();
         }
         companies.remove(company_id);
+        amount_of_companies--;
+        delete(company);
     }
     catch (KeyDoesntExist &k) {
         throw Failure();
@@ -265,6 +285,7 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
                     (int) (Factor * (AcquireCompany->GetCompanyValue() + TargetCompany->GetCompanyValue())));
             AcquireCompany->SetCompanyAmountOfEmployees(TargetCompany->GetAmountOfEmployees());
             companies.remove(TargetCompany->GetCompanyId());
+            amount_of_companies--;
             Pair<Employee *, SalaryId> *pair_list = AcquireCompany->GetCompanyEmployees().GetFirstNum(
                     AcquireCompany->GetAmountOfEmployees());
             for (int i = 0; i < AcquireCompany->GetAmountOfEmployees(); i++) {
@@ -275,6 +296,7 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
                 AcquireCompany->SetCompanyBestEmployee(best_emp);
                 best_earning_employees.insert(EmployeeByCompanyId((best_emp)), best_emp);
             }
+            delete(TargetCompany);
         } else {
             throw Failure();
         }
