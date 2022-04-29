@@ -255,7 +255,7 @@ public:
 
     ~Map();
 
-    T &find(Key key);
+    T find(Key key);
 
     void insert(Key key, T element);
 
@@ -273,7 +273,7 @@ public:
 };
 
 template<class T, class Key>
-T &Map<T, Key>::find(Key key) {
+T Map<T, Key>::find(Key key) {
     Node<T, Key> *result = GetNode(head, key);
     if (result == NULL)
         throw KeyDoesntExist();
@@ -350,10 +350,10 @@ void Map<T, Key>::remove(Key key) {
                 temp->father = rightest;
                 node->father->right = node->left;
                 node->left->father = node->father;
-
-
             }
         }
+        node->pair.element=NULL;
+        delete(node);
         BalanceRoute(temp);
         return;
     }
@@ -387,6 +387,7 @@ void Map<T, Key>::remove(Key key) {
             }
         }
     }
+    node->pair.element=NULL;
     delete (node);
     BalanceRoute(temp);
 }
@@ -447,6 +448,9 @@ void Map<T, Key>::merge(Map &map) {
     delete[] array2;
     amount = map.amount + this->amount;
     head = TreeFromArray(NULL, merged, 0, amount - 1);
+    for (int i = 0; i < amount-1; ++i) {
+        merged[i].element = NULL;
+    }
     delete[] merged;
 
 }

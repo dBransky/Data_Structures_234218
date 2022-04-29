@@ -278,8 +278,6 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
             if (TargetCompany->GetAmountOfEmployees() > 0) {
                 amount_of_companies_with_at_least_one_employee--;
             }
-//            AcquireCompany->SetCompanyEmployees(Map<Employee *, SalaryId>(AcquireCompany->GetCompanyEmployees(),
-//                                                                          TargetCompany->GetCompanyEmployees()));
             AcquireCompany->GetCompanyEmployees().merge(TargetCompany->GetCompanyEmployees());
             AcquireCompany->SetCompanyValue(
                     (int) (Factor * (AcquireCompany->GetCompanyValue() + TargetCompany->GetCompanyValue())));
@@ -433,16 +431,6 @@ void HighTech::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int Max
 
 }
 
-
-
-
-
-
-
-
-
-
-
 // Compnay
 
 Company::Company(int id, int value) : id(id), value(value), amount_of_employees(0), company_employees(), employees_id(),
@@ -452,7 +440,7 @@ void Company::AddCompanyValue(int valueIncrease) {
     value = value + valueIncrease;
 }
 
-int Company::GetCompanyValue() {
+int Company::GetCompanyValue() const {
     return value;
 }
 
@@ -461,7 +449,7 @@ Employee *Company::GetBestSalaryEmployee() {
 }
 
 
-int Company::GetAmountOfEmployees() {
+int Company::GetAmountOfEmployees() const {
     return amount_of_employees;
 }
 
@@ -485,7 +473,7 @@ int Company::GetEmployeeIdWithBestSalary() {
     return best_salary_employee->GetId();
 }
 
-void Company::SetCompanyEmployees(Map<Employee *, SalaryId> new_company_employees) {
+void Company::SetCompanyEmployees(const Map<Employee *, SalaryId>& new_company_employees) {
     company_employees = new_company_employees;
 }
 
@@ -497,7 +485,7 @@ void Company::SetCompanyBestEmployee(Employee *new_employee) {
     best_salary_employee = new_employee;
 }
 
-int Company::GetCompanyId() {
+int Company::GetCompanyId() const {
     return id;
 }
 
@@ -521,7 +509,7 @@ Employee::Employee(int salary, int grade, int employee_id, Company *company) : s
 
 }
 
-int Employee::GetSalary() {
+int Employee::GetSalary() const {
     return salary;
 }
 
@@ -533,7 +521,7 @@ void Employee::IncreaseGrade() {
     grade = grade + 1;
 }
 
-int Employee::GetGrade() {
+int Employee::GetGrade() const {
     return grade;
 }
 
@@ -545,7 +533,7 @@ Company *Employee::GetCompany() {
     return company;
 }
 
-int Employee::GetId() {
+int Employee::GetId() const {
     return id;
 }
 

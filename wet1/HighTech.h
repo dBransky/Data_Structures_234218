@@ -63,7 +63,7 @@ public:
 
     void RemoveEmployee();
 
-    int GetCompanyValue();
+    int GetCompanyValue() const;
 
     int GetCompanyAmountOfEmployees();
 
@@ -71,9 +71,9 @@ public:
 
     Employee *GetBestSalaryEmployee();
 
-    int GetCompanyId();
+    int GetCompanyId() const;
 
-    int GetAmountOfEmployees();
+    int GetAmountOfEmployees() const;
 
     Map<Employee *, SalaryId> &GetCompanyEmployees();
 
@@ -81,7 +81,7 @@ public:
 
     int GetEmployeeIdWithBestSalary();
 
-    void SetCompanyEmployees(Map<Employee *, SalaryId> new_company_employees);
+    void SetCompanyEmployees(const Map<Employee *, SalaryId>& new_company_employees);
 
     void SetCompanyValue(int new_value);
 
@@ -99,13 +99,13 @@ public:
 
     Employee(int salary, int grade, int employee_id, Company *company);
 
-    int GetSalary();
+    int GetSalary() const;
 
-    int GetGrade();
+    int GetGrade() const;
 
     int GetCompanyId();
 
-    int GetId();
+    int GetId() const;
 
     Company *GetCompany();
 
@@ -118,11 +118,11 @@ public:
 };
 
 class EmployeeByCompanyId {
-    Employee* employee;
+    Employee* employee{};
 public:
-    EmployeeByCompanyId() {};
+    EmployeeByCompanyId() = default;;
 
-    EmployeeByCompanyId(Employee* employee) :
+    explicit EmployeeByCompanyId(Employee* employee) :
             employee(employee) {
     }
 
