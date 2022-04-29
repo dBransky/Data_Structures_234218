@@ -45,6 +45,8 @@ private:
     }
 
     Node<T, Key> *GetLeftestNode(Node<T, Key> *node) {
+        if (node == NULL)
+            return NULL;
         if (node->left == NULL)
             return node;
         return GetLeftestNode(node->left);
@@ -106,7 +108,7 @@ private:
         Node<T, Key> *father = node->father;
         node->left = temp->right;
         if (node->left != NULL)
-            temp->right->father = node->left;
+            temp->right->father = node;
         temp->right = node;
         node->father = temp;
         if (father == NULL) {
@@ -118,10 +120,13 @@ private:
             } else {
                 father->right = temp;
             }
-            father->UpdateBalanceFactor();
+            temp->father = father;
         }
         node->UpdateBalanceFactor();
-        temp->UpdateBalanceFactor();
+        if (temp != NULL)
+            temp->UpdateBalanceFactor();
+        if (father != NULL)
+            father->UpdateBalanceFactor();
     }
 
     void RR_Roll(Node<T, Key> *node) {
@@ -129,7 +134,7 @@ private:
         Node<T, Key> *father = node->father;
         node->right = temp->left;
         if (node->right != NULL)
-            temp->left->father = node->right;
+            temp->left->father = node;
         temp->left = node;
         node->father = temp;
         if (father == NULL) {
@@ -141,11 +146,14 @@ private:
             } else {
                 father->right = temp;
             }
-            father->UpdateBalanceFactor();
+            temp->father = father;
         }
 
         node->UpdateBalanceFactor();
-        temp->UpdateBalanceFactor();
+        if (temp != NULL)
+            temp->UpdateBalanceFactor();
+        if (father != NULL)
+            father->UpdateBalanceFactor();
 
     }
 
@@ -306,6 +314,7 @@ void Map<T, Key>::insert(Key key, T element) {
     if (father->pair.key > key) {
         if (father->left == NULL) {
             father->left = new Node<T, Key>(NULL, NULL, father, pair);
+            father->UpdateBalanceFactor();
         } else {
             father->left->pair.element = element;
         }
@@ -328,32 +337,38 @@ void Map<T, Key>::remove(Key key) {
     Node<T, Key> *temp = NULL;
     amount--;
     if (node->right != NULL && node->left != NULL) {
-        if (node->father == NULL) {
-            head = node->right;
-            head->father = NULL;
-            temp = node->left;
-            Node<T, Key> *leftest = GetLeftestNode(node->right);
+        Node<T, Key> *leftest = GetLeftestNode(node->right);
+        if (leftest == node->right) {
             leftest->left = node->left;
-            node->left->father = leftest;
+            temp = leftest;
+            temp->father = node->father;
+            if (leftest->left != NULL)
+                leftest->left->father = leftest;
         } else {
-            if (IsLeftSon(node, node->father)) {
-                temp = node->left;
-                Node<T, Key> *leftest = GetLeftestNode(node->right);
-                leftest->left = temp;
-                temp->father = leftest;
-                node->father->left = node->right;
-                node->right->father = node->father;
-            } else {
-                temp = node->right;
-                Node<T, Key> *rightest = GetRightestNode(node->left);
-                rightest->right = temp;
-                temp->father = rightest;
-                node->father->right = node->left;
-                node->left->father = node->father;
-            }
+            temp = leftest->father;
+            temp->left = leftest->right;
+            if (leftest->right != NULL)
+                leftest->right->father = temp->left;
+            leftest->father = NULL;
+            leftest->left = node->left;
+            if (leftest->left != NULL)
+                leftest->left->father = leftest;
+            leftest->right = node->right;
+            if (leftest->right != NULL)
+                leftest->right->father = leftest;
         }
-        node->pair.element=NULL;
-        delete(node);
+        if (node->father == NULL) {
+            head = leftest;
+        } else {
+            if (IsLeftSon(node, node->father))
+                node->father->left = leftest;
+            else
+                node->father->right = leftest;
+        }
+        temp->UpdateBalanceFactor();
+        leftest->UpdateBalanceFactor();
+        node->pair.element = NULL;
+        delete (node);
         BalanceRoute(temp);
         return;
     }
@@ -387,7 +402,8 @@ void Map<T, Key>::remove(Key key) {
             }
         }
     }
-    node->pair.element=NULL;
+    temp->UpdateBalanceFactor();
+    node->pair.element = NULL;
     delete (node);
     BalanceRoute(temp);
 }
@@ -412,12 +428,16 @@ Pair<T, Key> *Map<T, Key>::GetFirstNum(int NumToReturn) {
 template<class T, class Key>
 Pair<T, Key> *Map<T, Key>::GetObjectsFromKey(Key min_key, Key max_key, int *size) {
     Node<T, Key> *father = GetNodeFather(head, min_key);
-    if (father->pair.key < min_key) {
-        *size = 0;
-        return NULL;
-    }
-    while (IsLeftSon(father, father->father)) {
-        father = father->father;
+    if (father == NULL)
+        father=head;
+    else {
+        if (father->pair.key < min_key) {
+            *size = 0;
+            return NULL;
+        }
+        while (IsLeftSon(father, father->father)) {
+            father = father->father;
+        }
     }
     *size = CountInorder(father, &max_key);
     auto *array = new Pair<T, Key>[*size];
@@ -448,7 +468,7 @@ void Map<T, Key>::merge(Map &map) {
     delete[] array2;
     amount = map.amount + this->amount;
     head = TreeFromArray(NULL, merged, 0, amount - 1);
-    for (int i = 0; i < amount-1; ++i) {
+    for (int i = 0; i < amount - 1; ++i) {
         merged[i].element = NULL;
     }
     delete[] merged;

@@ -399,6 +399,8 @@ void HighTech::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int Max
     if (CompanyID < 0) {
         Pair<Employee *, int> *pair_list = employees_sorted_by_id.GetObjectsFromKey(MinEmployeeID, MaxEmployeeID,
                                                                                     TotalNumOfEmployees);
+        if(*TotalNumOfEmployees==0)
+            throw Failure();
         int count = 0;
         for (int i = 0; i < *TotalNumOfEmployees; i++) {
             if (pair_list[i].element->GetSalary() >= MinSalary && pair_list[i].element->GetGrade() >= MinGrade) {
@@ -414,6 +416,8 @@ void HighTech::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int Max
             Pair<Employee *, int> *pair_list = company->GetCompanyIDEmployees().GetObjectsFromKey(MinEmployeeID,
                                                                                                   MaxEmployeeID,
                                                                                                   TotalNumOfEmployees);
+            if(*TotalNumOfEmployees==0)
+                throw Failure();
             int count = 0;
             for (int i = 0; i < *TotalNumOfEmployees; i++) {
                 if (pair_list[i].element->GetSalary() >= MinSalary && pair_list[i].element->GetGrade() >= MinGrade) {
