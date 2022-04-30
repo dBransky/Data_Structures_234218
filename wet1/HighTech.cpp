@@ -239,14 +239,14 @@ void HighTech::PromoteEmployee(int EmployeeID, int SalaryIncrease, int BumpGrade
         employees_sorted_by_salary.insert(SalaryId(employee->GetSalary(), employee->GetId()), employee);
         Employee *best_emp = company->GetBestSalaryEmployee();
         if (best_emp->GetSalary() < employee->GetSalary() ||
-            (best_emp->GetSalary() == employee->GetSalary() && best_emp->GetId() > employee->GetId())) {
+            (best_emp->GetSalary() == employee->GetSalary() && best_emp->GetId() < employee->GetId())) {
             employee->GetCompany()->GetCompanyEmployees().remove(SalaryId(employee->GetSalary(), EmployeeID));
             employee->GetCompany()->SetCompanyBestEmployee(
                     ((employee->GetCompany()->GetCompanyEmployees().GetMaxId())));
         }
         if (employee_with_best_salary->GetSalary() < employee->GetSalary() ||
             (employee_with_best_salary->GetSalary() == employee->GetSalary() &&
-             employee_with_best_salary->GetId() > employee->GetId())) {
+             employee_with_best_salary->GetId() < employee->GetId())) {
             best_earning_employees.remove(EmployeeByCompanyId((employee)));
             best_earning_employees.insert(
                     EmployeeByCompanyId((employee->GetCompany()->GetBestSalaryEmployee())),

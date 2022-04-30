@@ -3,6 +3,7 @@
 //
 
 #include <memory>
+#include <cassert>
 #include "Node.h"
 
 
@@ -364,6 +365,7 @@ void Map<T, Key>::remove(Key key) {
                 node->father->left = leftest;
             else
                 node->father->right = leftest;
+            leftest->father=node->father;
         }
         temp->UpdateBalanceFactor();
         leftest->UpdateBalanceFactor();
@@ -429,7 +431,7 @@ template<class T, class Key>
 Pair<T, Key> *Map<T, Key>::GetObjectsFromKey(Key min_key, Key max_key, int *size) {
     Node<T, Key> *father = GetNodeFather(head, min_key);
     if (father == NULL)
-        father=head;
+        father = head;
     else {
         if (father->pair.key < min_key) {
             *size = 0;
