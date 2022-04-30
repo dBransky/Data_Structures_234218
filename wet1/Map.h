@@ -128,6 +128,7 @@ private:
             temp->UpdateBalanceFactor();
         if (father != NULL)
             father->UpdateBalanceFactor();
+
     }
 
     void RR_Roll(Node<T, Key> *node) {
@@ -197,13 +198,28 @@ private:
         auto *merged = new Pair<T, Key>[array1_size + array2_size];
         int i = 0, j = 0, new_index = 0;
         while (i < array1_size || j < array2_size) {
-            if (j == array2_size || array1[i].key >= array2[j].key) {
-                merged[new_index] = array2[i];
+            if (new_index == 4)
+                int z = 1;
+            if (j == array2_size && i < array1_size) {
+                merged[new_index] = array1[i];
                 new_index++;
                 i++;
                 continue;
-            } else {
-                merged[new_index] = array1[j];
+            }
+            if (i == array1_size && j < array2_size) {
+                merged[new_index] = array2[j];
+                new_index++;
+                i++;
+                continue;
+            }
+            if ((i < array1_size && j < array2_size) && array1[i].key >= array2[j].key) {
+                merged[new_index] = array2[j];
+                new_index++;
+                i++;
+                continue;
+            }
+            if ((i < array1_size && j < array2_size) && array1[i].key < array2[j].key) {
+                merged[new_index] = array1[i];
                 new_index++;
                 j++;
                 continue;
@@ -235,6 +251,15 @@ private:
         FreePostOrder(node->left);
         FreePostOrder(node->right);
         delete (node);
+    }
+
+    bool is_valid(Node<T, Key> *node) {
+        if (node == NULL)
+            return true;
+        bool loop_free = (node->father != node) && is_valid(node->left) && is_valid(node->right);
+        node->pair.element->id++;
+        node->pair.element->id--;
+        return loop_free;
     }
 
     void NULLInorder(Node<T, Key> *node) {
@@ -320,6 +345,7 @@ void Map<T, Key>::insert(Key key, T element) {
             father->left->pair.element = element;
         }
         BalanceRoute(father->left);
+        assert(is_valid(head));
     } else {
         if (father->right == NULL) {
             father->right = new Node<T, Key>(NULL, NULL, father, pair);
@@ -327,6 +353,7 @@ void Map<T, Key>::insert(Key key, T element) {
             father->right->pair.element = element;
         }
         BalanceRoute(father->right);
+        assert(is_valid(head));
     }
 }
 
@@ -337,6 +364,11 @@ void Map<T, Key>::remove(Key key) {
         throw KeyDoesntExist();
     Node<T, Key> *temp = NULL;
     amount--;
+    if (amount == 0) {
+        delete head;
+        head = NULL;
+        return;
+    }
     if (node->right != NULL && node->left != NULL) {
         Node<T, Key> *leftest = GetLeftestNode(node->right);
         if (leftest == node->right) {
@@ -349,7 +381,7 @@ void Map<T, Key>::remove(Key key) {
             temp = leftest->father;
             temp->left = leftest->right;
             if (leftest->right != NULL)
-                leftest->right->father = temp->left;
+                leftest->right->father = temp;
             leftest->father = NULL;
             leftest->left = node->left;
             if (leftest->left != NULL)
@@ -365,13 +397,14 @@ void Map<T, Key>::remove(Key key) {
                 node->father->left = leftest;
             else
                 node->father->right = leftest;
-            leftest->father=node->father;
+            leftest->father = node->father;
         }
         temp->UpdateBalanceFactor();
         leftest->UpdateBalanceFactor();
         node->pair.element = NULL;
         delete (node);
         BalanceRoute(temp);
+        assert(is_valid(head));
         return;
     }
     if (node->right == NULL && node->left == NULL) {
@@ -408,6 +441,7 @@ void Map<T, Key>::remove(Key key) {
     node->pair.element = NULL;
     delete (node);
     BalanceRoute(temp);
+    assert(is_valid(head));
 }
 
 template<class T, class Key>
@@ -474,6 +508,7 @@ void Map<T, Key>::merge(Map &map) {
         merged[i].element = NULL;
     }
     delete[] merged;
+    assert(is_valid(head));
 
 }
 

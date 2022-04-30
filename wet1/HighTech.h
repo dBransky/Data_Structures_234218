@@ -48,13 +48,13 @@ class Employee;
 
 class Company {
 private:
-    int id;
     int value;
     int amount_of_employees;
     Employee *best_salary_employee;
     Map<Employee *, SalaryId> company_employees;
     Map<Employee *, int> employees_id;
 public:
+    int id;
     Company(int id, int value);
 
     void AddCompanyValue(int valueIncrease);
@@ -90,11 +90,11 @@ public:
 
 class Employee {
 private:
-    int id;
     int salary;
     int grade;
     Company *company;
 public:
+    int id;
     Employee();
 
     Employee(int salary, int grade, int employee_id, Company *company);
