@@ -119,6 +119,7 @@ void HighTech::RemoveEmployee(int employee_id)
         Employee *employee = employees_sorted_by_id.find(employee_id);
         employees_sorted_by_id.remove(employee_id);
         employees_sorted_by_salary.remove(SalaryId(employee->GetSalary(), employee_id));
+        assert(employee->GetCompany()->GetCompanyEmployees().does_exist(SalaryId(employee->GetSalary(), employee_id)));
         employee->GetCompany()->GetCompanyEmployees().remove(SalaryId(employee->GetSalary(), employee_id));
         employee->GetCompany()->GetCompanyIDEmployees().remove(employee_id);
         employee->GetCompany()->RemoveEmployee();
@@ -206,18 +207,23 @@ void HighTech::IncreaseCompanyValue(int CompanyId, int ValueIncrease) {
     }
 }
 
+
 void HighTech::HireEmployee(int EmployeeID, int NewCompanyID) {
     if (EmployeeID <= 0 || NewCompanyID <= 0) {
         throw InvalidInput();
     }
+
     try {
         Employee *employee = employees_sorted_by_id.find(EmployeeID); // O(log n)
         int salary = employee->GetSalary();
         int grade = employee->GetGrade();
         Company *company = companies.find(NewCompanyID);
+        if (company->GetCompanyIDEmployees().does_exist(EmployeeID))
+        {
+            throw Failure();
+        }
         RemoveEmployee(EmployeeID);
         AddEmployee(EmployeeID, NewCompanyID, salary, grade); // O(log k + log n)
-
     }
     catch (KeyDoesntExist &k) {
         throw Failure();
@@ -280,6 +286,7 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
                 amount_of_companies_with_at_least_one_employee++;
             }
             AcquireCompany->GetCompanyEmployees().merge(TargetCompany->GetCompanyEmployees());
+
             AcquireCompany->SetCompanyValue(
                     (int) (Factor * (AcquireCompany->GetCompanyValue() + TargetCompany->GetCompanyValue())));
             AcquireCompany->SetCompanyAmountOfEmployees(TargetCompany->GetAmountOfEmployees());
@@ -490,6 +497,7 @@ void Company::RemoveEmployee() {
 Map<Employee *, int> &Company::GetCompanyIDEmployees() {
     return employees_id;
 }
+
 
 Map<Employee *, SalaryId> &Company::GetCompanyEmployees() {
     return company_employees;
