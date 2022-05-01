@@ -239,10 +239,8 @@ private:
             if (node->pair.key > *max_key)
                 return;
         }
-        if(max>*index) {
-            arr[*index] = node->pair;
-            (*index)++;
-        }
+        arr[*index] = node->pair;
+        (*index)++;
         StoreInorder(node->right, arr, index, max, max_key);
 
     }

@@ -402,54 +402,62 @@ void HighTech::GetHighestEarnerInEachCompany(int NumOfCompanies, int **Employees
     delete []pair_list;
     *Employees = emp;
 }
-
 void HighTech::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int MaxEmployeeID, int MinSalary, int MinGrade,
                                        int *TotalNumOfEmployees, int *NumOfEmployees) {
     if (TotalNumOfEmployees == NULL || NumOfEmployees == NULL || CompanyID == 0 || MinEmployeeID < 0 ||
         MaxEmployeeID < 0 || MinSalary < 0 || MinGrade < 0 || MinEmployeeID > MaxEmployeeID) {
         throw InvalidInput();
     }
-    if (CompanyID < 0 && employee_with_best_salary == NULL) {
-        throw Failure();
-    }
-    if (CompanyID < 0) {
-        Pair<Employee *, int> *pair_list = employees_sorted_by_id.GetObjectsFromKey(MinEmployeeID, MaxEmployeeID,
-                                                                                    TotalNumOfEmployees);
-        if(*TotalNumOfEmployees==0)
+    Pair<Employee *, int> *pair_list = NULL;
+    if (CompanyID < 0)
+    {
+        if (total_amount_of_employees == 0)
+        {
             throw Failure();
-        int count = 0;
-        for (int i = 0; i < *TotalNumOfEmployees; i++) {
-            if (pair_list[i].element->GetSalary() >= MinSalary && pair_list[i].element->GetGrade() >= MinGrade) {
-                pair_list[i].element=NULL;
-                count++;
-            }
         }
-        delete[] pair_list;
-        *NumOfEmployees = count;
-    } else {
-        try {
+        else
+        {
+            pair_list = employees_sorted_by_id.GetObjectsFromKey(MinEmployeeID, MaxEmployeeID, TotalNumOfEmployees);
+        }
+    }
+    else
+    {
+        try
+        {
             Company *company = companies.find(CompanyID);
-            Pair<Employee *, int> *pair_list = company->GetCompanyIDEmployees().GetObjectsFromKey(MinEmployeeID,
-                                                                                                  MaxEmployeeID,
-                                                                                                  TotalNumOfEmployees);
-            int count = 0;
-            for (int i = 0; i < *TotalNumOfEmployees; i++) {
-                if (pair_list[i].element->GetSalary() >= MinSalary && pair_list[i].element->GetGrade() >= MinGrade) {
-                    pair_list[i].element=NULL;
-                    count++;
-                }
+            if (company->GetAmountOfEmployees() == 0)
+            {
+                throw Failure();
             }
-            delete[] pair_list;
-            *NumOfEmployees = count;
+            pair_list = company->GetCompanyIDEmployees().GetObjectsFromKey(MinEmployeeID,MaxEmployeeID,TotalNumOfEmployees);
         }
         catch (KeyDoesntExist &k) {
             throw Failure();
         }
     }
-
+    int my_total = 0;
+    if (TotalNumOfEmployees != NULL)
+    {
+        my_total = *TotalNumOfEmployees;
+    }
+    else
+    {
+        *TotalNumOfEmployees = my_total;
+    }
+    *TotalNumOfEmployees = my_total;
+    int count = 0;
+    for (int i = 0; i < my_total; i++)
+    {
+        if (pair_list[i].element->GetSalary() >= MinSalary && pair_list[i].element->GetGrade() >= MinGrade)
+        {
+            pair_list[i].element=NULL;
+            count++;
+        }
+    }
+    delete[] pair_list;
+    *NumOfEmployees = count;
 }
 
-// Compnay
 
 Company::Company(int id, int value) : id(id), value(value), amount_of_employees(0), company_employees(), employees_id(),
                                       best_salary_employee(NULL) {}
