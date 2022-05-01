@@ -215,13 +215,13 @@ private:
             if ((i < array1_size && j < array2_size) && array1[i].key >= array2[j].key) {
                 merged[new_index] = array2[j];
                 new_index++;
-                i++;
+                j++;
                 continue;
             }
             if ((i < array1_size && j < array2_size) && array1[i].key < array2[j].key) {
                 merged[new_index] = array1[i];
                 new_index++;
-                j++;
+                i++;
                 continue;
             }
 
@@ -510,19 +510,24 @@ void Map<T, Key>::merge(Map &map) {
     Pair<T, Key> *array1 = map.ArrayFromTree();
     Pair<T, Key> *array2 = this->ArrayFromTree();
     Pair<T, Key> *merged = MergeSortedArrays(array1, array2, map.amount, this->amount);
-    for (int i = 0; i < map.amount; ++i) {
-        array1[i].element = NULL;
-    }
-    for (int i = 0; i < this->amount; ++i) {
-        array2[i].element = NULL;
-    }
+    amount = map.amount + this->amount;
     NULLInorder(map.head);
     NULLInorder(this->head);
+    head = TreeFromArray(NULL, merged, 0, amount - 1);
+    assert(is_valid(head));
+    for (int i = 0; i < map.amount; ++i) {
+        if(!does_exist(array1[i].key))
+            int z=1;
+        array1[i].element = NULL;
+    }
+    for (int i = 0; i < this->amount-map.amount; ++i) {
+        if(!does_exist(array2[i].key))
+            int z=1;
+        array2[i].element = NULL;
+    }
     delete[] array1;
     delete[] array2;
-    amount = map.amount + this->amount;
-    head = TreeFromArray(NULL, merged, 0, amount - 1);
-    for (int i = 0; i < amount - 1; ++i) {
+    for (int i = 0; i < amount; ++i) {
         merged[i].element = NULL;
     }
     delete[] merged;
