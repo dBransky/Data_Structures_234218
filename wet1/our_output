@@ -1,4 +1,3 @@
-C:\Users\Daniel\CLionProjects\Data_Structures_234218\cmake-build-debug\Data_Structures_234218.exe
 Init done
 AddCompany: SUCCESS
 AddCompany: SUCCESS
@@ -195,7 +194,7 @@ GetHighestEarner: FAILURE
 RemoveEmployee: INVALID_INPUT
 IncreaseCompanyValue: SUCCESS
 IncreaseCompanyValue: SUCCESS
-GetNumEmployeesMatching: FAILURE
+GetNumEmployeesMatching: SUCCESS. Out of 0, 0 match
 GetNumEmployeesMatching: INVALID_INPUT
 GetNumEmployeesMatching: INVALID_INPUT
 AcquireCompany: FAILURE
@@ -512,7 +511,7 @@ PromoteEmployee: SUCCESS
 GetHighestEarnerInEachCompany: INVALID_INPUT
 GetEmployeeInfo: SUCCESS. Employee 3289 works at 187 and earns 36 at grade 3
 IncreaseCompanyValue: INVALID_INPUT
-GetHighestEarner: SUCCESS. Highest earner is 7105
+GetHighestEarner: SUCCESS. Highest earner is 5460
 GetCompanyInfo: SUCCESS. Company 441 has 11 employees and value 17
 RemoveEmployee: FAILURE
 RemoveEmployee: INVALID_INPUT
@@ -1127,11 +1126,11 @@ GetEmployeeInfo: SUCCESS. Employee 4208 works at 412 and earns 91 at grade 5
 GetEmployeeInfo: SUCCESS. Employee 295 works at 439 and earns 87 at grade 7
 RemoveEmployee: INVALID_INPUT
 GetEmployeeInfo: SUCCESS. Employee 7811 works at 61 and earns 161 at grade 9
-GetHighestEarner: SUCCESS. Highest earner is 7105
+GetHighestEarner: SUCCESS. Highest earner is 5460
 AcquireCompany: INVALID_INPUT
 GetAllEmployeesBySalary: FAILURE
-GetHighestEarner: SUCCESS. Highest earner is 7105
-GetHighestEarner: SUCCESS. Highest earner is 7105
+GetHighestEarner: SUCCESS. Highest earner is 5460
+GetHighestEarner: SUCCESS. Highest earner is 5460
 PromoteEmployee: SUCCESS
 AddEmployee: SUCCESS
 GetHighestEarner: FAILURE
@@ -1158,7 +1157,7 @@ AddCompany: SUCCESS
 AcquireCompany: FAILURE
 HireEmployee: SUCCESS
 GetEmployeeInfo: SUCCESS. Employee 4338 works at 376 and earns 8 at grade 6
-GetHighestEarner: SUCCESS. Highest earner is 7105
+GetHighestEarner: SUCCESS. Highest earner is 2645
 GetCompanyInfo: SUCCESS. Company 441 has 12 employees and value 17
 HireEmployee: SUCCESS
 GetCompanyInfo: SUCCESS. Company 376 has 10 employees and value 33
@@ -1319,12 +1318,12 @@ AcquireCompany: FAILURE
 RemoveCompany: INVALID_INPUT
 HireEmployee: SUCCESS
 HireEmployee: SUCCESS
-GetHighestEarner: SUCCESS. Highest earner is 7105
+GetHighestEarner: SUCCESS. Highest earner is 2645
 GetNumEmployeesMatching: INVALID_INPUT
 HireEmployee: SUCCESS
 IncreaseCompanyValue: SUCCESS
 GetCompanyInfo: SUCCESS. Company 395 has 1 employees and value 8
-GetHighestEarner: SUCCESS. Highest earner is 7105
+GetHighestEarner: SUCCESS. Highest earner is 2645
 HireEmployee: SUCCESS
 HireEmployee: SUCCESS
 PromoteEmployee: SUCCESS
@@ -1336,10 +1335,10 @@ IncreaseCompanyValue: SUCCESS
 GetCompanyInfo: SUCCESS. Company 9 has 7 employees and value 97
 PromoteEmployee: SUCCESS
 GetEmployeeInfo: SUCCESS. Employee 4732 works at 441 and earns 108 at grade 7
-GetHighestEarner: SUCCESS. Highest earner is 4732
-GetHighestEarner: SUCCESS. Highest earner is 4732
+GetHighestEarner: SUCCESS. Highest earner is 2645
+GetHighestEarner: SUCCESS. Highest earner is 2645
 GetAllEmployeesBySalary: FAILURE
-GetHighestEarner: SUCCESS. Highest earner is 4732
+GetHighestEarner: SUCCESS. Highest earner is 2645
 GetEmployeeInfo: SUCCESS. Employee 3457 works at 151 and earns 16 at grade 3
 AcquireCompany: FAILURE
 HireEmployee: SUCCESS
@@ -1640,7 +1639,7 @@ AddEmployee: SUCCESS
 GetHighestEarnerInEachCompany: INVALID_INPUT
 PromoteEmployee: SUCCESS
 PromoteEmployee: SUCCESS
-GetHighestEarner: SUCCESS. Highest earner is 4732
+GetHighestEarner: SUCCESS. Highest earner is 2645
 GetAllEmployeesBySalary: FAILURE
 GetHighestEarnerInEachCompany: INVALID_INPUT
 GetHighestEarnerInEachCompany: INVALID_INPUT
@@ -1823,7 +1822,7 @@ GetCompanyInfo: SUCCESS. Company 386 has 9 employees and value 99
 RemoveEmployee: FAILURE
 RemoveCompany: INVALID_INPUT
 GetEmployeeInfo: SUCCESS. Employee 5552 works at 347 and earns 137 at grade 5
-GetHighestEarner: SUCCESS. Highest earner is 4732
+GetHighestEarner: SUCCESS. Highest earner is 2645
 GetCompanyInfo: SUCCESS. Company 347 has 8 employees and value 68
 PromoteEmployee: SUCCESS
 AddEmployee: SUCCESS
@@ -1975,9 +1974,9 @@ Employee Rank || Employee ID
 139 - 436
 140 - 6614
 141 - 7349
-GetNumEmployeesMatching: FAILURE
+GetNumEmployeesMatching: SUCCESS. Out of 1, 1 match
 GetEmployeeInfo: SUCCESS. Employee 4574 works at 412 and earns 66 at grade 3
-GetHighestEarner: SUCCESS. Highest earner is 4732
+GetHighestEarner: SUCCESS. Highest earner is 2645
 RemoveEmployee: FAILURE
 IncreaseCompanyValue: SUCCESS
 AddEmployee: SUCCESS
@@ -2298,7 +2297,7 @@ GetHighestEarner: SUCCESS. Highest earner is 4732
 GetAllEmployeesBySalary: FAILURE
 PromoteEmployee: SUCCESS
 GetCompanyInfo: SUCCESS. Company 386 has 11 employees and value 103
-GetHighestEarner: SUCCESS. Highest earner is 5676
+GetHighestEarner: SUCCESS. Highest earner is 2645
 IncreaseCompanyValue: SUCCESS
 GetAllEmployeesBySalary: SUCCESS. Highest earners:
 Employee Rank || Employee ID
@@ -2623,7 +2622,7 @@ GetNumEmployeesMatching: INVALID_INPUT
 GetCompanyInfo: SUCCESS. Company 321 has 9 employees and value 24
 GetCompanyInfo: SUCCESS. Company 441 has 13 employees and value 24
 RemoveEmployee: SUCCESS
-GetHighestEarner: SUCCESS. Highest earner is 5676
+GetHighestEarner: SUCCESS. Highest earner is 2645
 GetAllEmployeesBySalary: SUCCESS. Highest earners:
 Employee Rank || Employee ID
 0 - 2645
@@ -3276,7 +3275,7 @@ Employee Rank || Employee ID
 139 - 6614
 140 - 7349
 HireEmployee: SUCCESS
-GetHighestEarner: SUCCESS. Highest earner is 5676
+GetHighestEarner: SUCCESS. Highest earner is 846
 IncreaseCompanyValue: SUCCESS
 PromoteEmployee: SUCCESS
 HireEmployee: SUCCESS
@@ -3600,7 +3599,7 @@ AddCompany: SUCCESS
 HireEmployee: SUCCESS
 AcquireCompany: FAILURE
 HireEmployee: SUCCESS
-GetNumEmployeesMatching: FAILURE
+GetNumEmployeesMatching: SUCCESS. Out of 0, 0 match
 GetHighestEarner: SUCCESS. Highest earner is 5676
 GetCompanyInfo: SUCCESS. Company 321 has 7 employees and value 24
 AddEmployee: SUCCESS
@@ -3756,7 +3755,7 @@ Employee Rank || Employee ID
 139 - 436
 140 - 6614
 AcquireCompany: INVALID_INPUT
-GetHighestEarner: SUCCESS. Highest earner is 2824
+GetHighestEarner: SUCCESS. Highest earner is 846
 GetCompanyInfo: SUCCESS. Company 439 has 6 employees and value 47
 PromoteEmployee: SUCCESS
 AcquireCompany: INVALID_INPUT
@@ -3935,7 +3934,7 @@ IncreaseCompanyValue: SUCCESS
 GetNumEmployeesMatching: INVALID_INPUT
 PromoteEmployee: SUCCESS
 GetNumEmployeesMatching: INVALID_INPUT
-GetHighestEarner: SUCCESS. Highest earner is 2655
+GetHighestEarner: SUCCESS. Highest earner is 846
 IncreaseCompanyValue: SUCCESS
 GetCompanyInfo: SUCCESS. Company 490 has 4 employees and value 6
 GetEmployeeInfo: SUCCESS. Employee 4561 works at 347 and earns 29 at grade 6
@@ -4444,15 +4443,17 @@ PromoteEmployee: SUCCESS
 AcquireCompany: FAILURE
 AcquireCompany: FAILURE
 AcquireCompany: INVALID_INPUT
-GetHighestEarner: SUCCESS. Highest earner is 2655
+GetHighestEarner: SUCCESS. Highest earner is 846
 HireEmployee: SUCCESS
-GetHighestEarner: SUCCESS. Highest earner is 2655
+GetHighestEarner: SUCCESS. Highest earner is 846
 PromoteEmployee: SUCCESS
 GetCompanyInfo: SUCCESS. Company 347 has 11 employees and value 73
 AcquireCompany: INVALID_INPUT
 AddCompany: SUCCESS
-GetHighestEarner: SUCCESS. Highest earner is 2655
+GetHighestEarner: SUCCESS. Highest earner is 846
 AddEmployee: SUCCESS
 HireEmployee: SUCCESS
 AcquireCompany: INVALID_INPUT
 PromoteEmployee: SUCCESS
+
+Process finished with exit code 1

@@ -282,8 +282,29 @@ private:
         sum += CountInorder(node->right);
         return sum;
     }
+    int ArrayByMinMax(Node<T, Key> *node, Pair<T, Key> arr[], int *index,Key min_key, Key max_key) {
+        if(node->left!=NULL&&node->pair.key>=min_key)
+            ArrayByMinMax(node->left,arr,index,min_key,max_key);
+        if(node->pair.key>=min_key&&node->pair.key<=max_key)
+        {
+            arr[*index] = node->pair;
+            (*index)++;
+        }
+        if(node->right!=NULL&&node->pair.key<=max_key)
+            ArrayByMinMax(node->right,arr,index,min_key,max_key);
 
+    }
+    int CountMinMax(Node<T, Key> *node, int *size,Key min_key, Key max_key) {
+        if(node->left!=NULL&&node->pair.key>=min_key)
+            CountMinMax(node->left,size,min_key,max_key);
+        if(node->pair.key>=min_key&&node->pair.key<=max_key)
+        {
+            (*size)++;
+        }
+        if(node->right!=NULL&&node->pair.key<=max_key)
+            CountMinMax(node->right,size,min_key,max_key);
 
+    }
 public:
     Map();
 
@@ -449,7 +470,8 @@ T Map<T, Key>::GetMaxId() {
     if (head == NULL) {
         return NULL;
     }
-    return GetRightestNode(head)->pair.element;
+    auto* node=GetRightestNode(head)->pair.element;
+    return node;
 }
 
 
@@ -463,25 +485,18 @@ Pair<T, Key> *Map<T, Key>::GetFirstNum(int NumToReturn) {
 
 template<class T, class Key>
 Pair<T, Key> *Map<T, Key>::GetObjectsFromKey(Key min_key, Key max_key, int *size) {
-    Node<T, Key> *father = GetNodeFather(head, min_key);
-    if (father == NULL)
-        father = head;
-    else {
-        if (father->pair.key < min_key) {
-            *size = 0;
-            return NULL;
-        }
-        while (IsLeftSon(father, father->father)) {
-            father = father->father;
-        }
+    if(head==NULL)
+    {
+        *size=0;
+        return NULL;
     }
-    *size = CountInorder(father, &max_key);
+    CountMinMax(head,size,min_key,max_key);
     auto *array = new Pair<T, Key>[*size];
-    int i = 0;
-    StoreInorder(father, array, &i, INT16_MAX, &max_key);
+    int i;
+    ArrayByMinMax(head,array,&i,min_key,max_key);
     return array;
-}
 
+}
 template<class T, class Key>
 Map<T, Key>::~Map() {
     FreePostOrder(head);
