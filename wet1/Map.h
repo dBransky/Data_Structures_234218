@@ -196,10 +196,10 @@ private:
 
     Pair<T, Key> *MergeSortedArrays(Pair<T, Key> array1[], Pair<T, Key> array2[], int array1_size, int array2_size) {
         auto *merged = new Pair<T, Key>[array1_size + array2_size];
-        int i = 0, j = 0, new_index = 0;
+        int i =0;
+        int j=0;
+        int new_index=0;
         while (i < array1_size || j < array2_size) {
-            if (new_index == 4)
-                int z = 1;
             if (j == array2_size && i < array1_size) {
                 merged[new_index] = array1[i];
                 new_index++;
@@ -209,7 +209,7 @@ private:
             if (i == array1_size && j < array2_size) {
                 merged[new_index] = array2[j];
                 new_index++;
-                i++;
+                j++;
                 continue;
             }
             if ((i < array1_size && j < array2_size) && array1[i].key >= array2[j].key) {
