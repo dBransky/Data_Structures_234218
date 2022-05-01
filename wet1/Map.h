@@ -495,7 +495,7 @@ Pair<T, Key> *Map<T, Key>::GetObjectsFromKey(Key min_key, Key max_key, int *size
     }
     CountMinMax(head,size,min_key,max_key);
     auto *array = new Pair<T, Key>[*size];
-    int i;
+    int i=0;
     ArrayByMinMax(head,array,&i,min_key,max_key);
     return array;
 
