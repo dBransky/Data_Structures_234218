@@ -485,6 +485,7 @@ Pair<T, Key> *Map<T, Key>::GetFirstNum(int NumToReturn) {
 
 template<class T, class Key>
 Pair<T, Key> *Map<T, Key>::GetObjectsFromKey(Key min_key, Key max_key, int *size) {
+    *size=0;
     if(head==NULL)
     {
         *size=0;
