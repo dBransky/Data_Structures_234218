@@ -482,6 +482,8 @@ Pair<T, Key> *Map<T, Key>::GetFirstNum(int NumToReturn) {
     auto *array = new Pair<T, Key>[NumToReturn];
     int i = 0;
     StoreInorder(this->head, array, &i, NumToReturn);
+    array[NumToReturn-1].element->id++;
+    array[NumToReturn-1].element->id--;
     return array;
 }
 
@@ -516,13 +518,9 @@ void Map<T, Key>::merge(Map &map) {
     head = TreeFromArray(NULL, merged, 0, amount - 1);
     assert(is_valid(head));
     for (int i = 0; i < map.amount; ++i) {
-        if(!does_exist(array1[i].key))
-            int z=1;
         array1[i].element = NULL;
     }
     for (int i = 0; i < this->amount-map.amount; ++i) {
-        if(!does_exist(array2[i].key))
-            int z=1;
         array2[i].element = NULL;
     }
     delete[] array1;

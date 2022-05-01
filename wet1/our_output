@@ -5813,4 +5813,5 @@ GetHighestEarner: FAILURE
 AddCompany: SUCCESS
 GetHighestEarner: FAILURE
 AcquireCompany: INVALID_INPUT
-Signal: SIGSEGV (Segmentation fault)
+
+Process finished with exit code -1073741819 (0xC0000005)

@@ -263,6 +263,8 @@ void HighTech::PromoteEmployee(int EmployeeID, int SalaryIncrease, int BumpGrade
 }
 
 void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
+    if(AcquireID==151&&TargetID==246)
+        int z=1;
     if (AcquireID <= 0 || TargetID <= 0 || AcquireID == TargetID || Factor < 1.00) {
         throw InvalidInput();
     }
