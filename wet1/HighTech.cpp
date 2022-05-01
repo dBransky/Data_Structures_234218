@@ -245,7 +245,11 @@ void HighTech::PromoteEmployee(int EmployeeID, int SalaryIncrease, int BumpGrade
         employees_sorted_by_salary.insert(SalaryId(employee->GetSalary(), employee->GetId()), employee);
         company->SetCompanyBestEmployee(company->GetCompanyEmployees().GetMaxId());
         best_earning_employees.insert(EmployeeByCompanyId(company->GetBestSalaryEmployee()),company->GetBestSalaryEmployee());
-        employee_with_best_salary = best_earning_employees.GetMaxId();
+        if (employee->GetSalary() > employee_with_best_salary->GetSalary())
+        {
+            employee_with_best_salary = employee;
+        }
+        employee_with_best_salary = employees_sorted_by_salary.GetMaxId();
     }
     catch (KeyDoesntExist &k) {
         throw Failure();
@@ -304,23 +308,38 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
 }
 
 void HighTech::GetHighestEarner(int CompanyID, int *EmployeeID) {
-    if (CompanyID == 0 || EmployeeID == NULL) {
+    if (CompanyID == 0 || EmployeeID == NULL)
+    {
         throw InvalidInput();
     }
-    if (CompanyID < 0 && employee_with_best_salary == NULL) {
-        throw Failure();
+    if (CompanyID < 0)
+    {
+        if (total_amount_of_employees == 0)
+        {
+            throw Failure();
+        }
+        else
+        {
+            *EmployeeID = employee_with_best_salary->GetId();
+        }
     }
-    if (CompanyID < 0) {
-        *EmployeeID = employee_with_best_salary->GetId();
-    } else {
-        try {
-            Company *company = companies.find(CompanyID);
-            if ((company->GetEmployeeIdWithBestSalary()) == NULL) {
+    else
+    {
+        try
+        {
+            Company* company = companies.find(CompanyID);
+            if (company->GetAmountOfEmployees() == 0)
+            {
                 throw Failure();
             }
-            *EmployeeID = company->GetEmployeeIdWithBestSalary();
+            else
+            {
+                *EmployeeID = company->GetBestSalaryEmployee()->GetId();
+            }
+
         }
-        catch (KeyDoesntExist &k) {
+        catch (KeyDoesntExist& k)
+        {
             throw Failure();
         }
     }
