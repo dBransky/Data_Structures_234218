@@ -4857,7 +4857,7 @@ IncreaseCompanyValue: INVALID_INPUT
 AcquireCompany: FAILURE
 GetAllEmployeesBySalary: SUCCESS. Highest earners:
 Employee Rank || Employee ID
-0 - 16057024
+0 - 7537344
 1 - 846
 2 - 3600
 3 - 2645

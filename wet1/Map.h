@@ -15,7 +15,7 @@ bool CompareKeys(Node<T, Key> *node, Key key) {
     if (node == NULL)
         return false;
     return node->pair.key == key;
-};
+}
 
 class MapError : public std::exception {
 };
@@ -312,6 +312,8 @@ public:
 
     ~Map();
 
+    bool does_exist(Key key);
+
     T find(Key key);
 
     void insert(Key key, T element);
@@ -335,8 +337,6 @@ T Map<T, Key>::find(Key key) {
     if (result == NULL)
         throw KeyDoesntExist();
     return result->pair.element;
-
-
 }
 
 
@@ -528,6 +528,12 @@ void Map<T, Key>::merge(Map &map) {
     delete[] merged;
     assert(is_valid(head));
 
+}
+
+template<class T, class Key>
+bool Map<T, Key>::does_exist(Key key) {
+    Node<T, Key> *result = GetNode(head, key);
+    return result;
 }
 
 
