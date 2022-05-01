@@ -195,7 +195,6 @@ public:
 
     void UpdateInCompany(Employee *employee, Company *company);
 
-    void UpdateInHighTech(Employee *employee);
 };
 
 #endif //DATA_STRUCTURES_234218_HIGHTECH_H
