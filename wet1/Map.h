@@ -284,7 +284,7 @@ private:
         sum += CountInorder(node->right);
         return sum;
     }
-    int ArrayByMinMax(Node<T, Key> *node, Pair<T, Key> arr[], int *index,Key min_key, Key max_key) {
+    void ArrayByMinMax(Node<T, Key> *node, Pair<T, Key> arr[], int *index,Key min_key, Key max_key) {
         if(node->left!=NULL&&node->pair.key>=min_key)
             ArrayByMinMax(node->left,arr,index,min_key,max_key);
         if(node->pair.key>=min_key&&node->pair.key<=max_key)
@@ -296,7 +296,7 @@ private:
             ArrayByMinMax(node->right,arr,index,min_key,max_key);
 
     }
-    int CountMinMax(Node<T, Key> *node, int *size,Key min_key, Key max_key) {
+    void CountMinMax(Node<T, Key> *node, int *size,Key min_key, Key max_key) {
         if(node->left!=NULL&&node->pair.key>=min_key)
             CountMinMax(node->left,size,min_key,max_key);
         if(node->pair.key>=min_key&&node->pair.key<=max_key)
@@ -515,6 +515,7 @@ void Map<T, Key>::merge(Map &map) {
     amount = map.amount + this->amount;
     NULLInorder(map.head);
     NULLInorder(this->head);
+    FreePostOrder(head);
     head = TreeFromArray(NULL, merged, 0, amount - 1);
     assert(is_valid(head));
     for (int i = 0; i < map.amount; ++i) {

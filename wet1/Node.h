@@ -15,11 +15,11 @@ public:
     int h_right;
     int balance_factor;
     Pair<T, Key> pair;
-    Node* left;
-    Node* right;
-    Node* father;
+    Node *left;
+    Node *right;
+    Node *father;
 
-    Node(Node<T,Key>* left, Node<T,Key>* right, Node<T,Key>* father,
+    Node(Node<T, Key> *left, Node<T, Key> *right, Node<T, Key> *father,
          Pair<T, Key> pair);
 
     void UpdateBalanceFactor() {
@@ -36,13 +36,14 @@ public:
 };
 
 template<class T, class Key>
-Node<T, Key>::Node(Node<T,Key>* left, Node<T,Key>* right,
-                   Node<T,Key>* father, Pair<T, Key> pair):
+Node<T, Key>::Node(Node<T, Key> *left, Node<T, Key> *right,
+                   Node<T, Key> *father, Pair<T, Key> pair):
 
-        left(left), right(right), father(father), pair(pair),h_right(0),h_left(0),balance_factor(0) {
+        left(left), right(right), father(father), pair(pair) {
+    h_left=0;
+    h_right=0;
+    balance_factor=0;
     this->UpdateBalanceFactor();
-
-
 }
 
 

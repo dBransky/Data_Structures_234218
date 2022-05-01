@@ -267,7 +267,7 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
             }
             AcquireCompany->GetCompanyEmployees().merge(TargetCompany->GetCompanyEmployees());
             AcquireCompany->GetCompanyIDEmployees().merge(TargetCompany->GetCompanyIDEmployees());
-            int new_value = floor((tr_value + ac_value) * (Factor + 1e-15));
+            int new_value = floor((tr_value + ac_value) * (Factor));
             AcquireCompany->SetCompanyValue(new_value);
             AcquireCompany->SetCompanyAmountOfEmployees(total_amount);
             companies.remove(TargetCompany->GetCompanyId());
