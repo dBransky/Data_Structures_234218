@@ -1,5 +1,5 @@
 #include "HighTech.h"
-#include <cmath>)
+#include <cmath>
 
 void HighTech::UpdateInCompany(Employee *employee, Company *company) {
     if (company->GetAmountOfEmployees() == 1)
@@ -353,7 +353,7 @@ void HighTech::GetAllEmployeesBySalary(int companyID, int **Employees, int *NumO
     } else {
         try {
             Company *company = companies.find(companyID);
-            if (company->GetEmployeeIdWithBestSalary() == NULL) {
+            if (!company->GetEmployeeIdWithBestSalary()) {
                 throw Failure();
             }
             int *emp = (int *) malloc(company->GetAmountOfEmployees() * sizeof(int));
