@@ -2,28 +2,24 @@
 #include <cmath>
 
 void HighTech::UpdateInCompany(Employee *employee, Company *company) {
-    if (company->GetAmountOfEmployees() == 1)
-    {
+    if (company->GetAmountOfEmployees() == 1) {
         company->SetCompanyBestEmployee(employee);
         best_earning_employees.insert(EmployeeByCompanyId((employee)), employee);
         amount_of_companies_with_at_least_one_employee++;
-    }
-    else
-    {
-            Employee *best_emp = company->GetBestSalaryEmployee();
-            int max_salary = best_emp->GetSalary();
-            int max_id = best_emp->GetId();
-            int current_salary = employee->GetSalary();
-            int current_id = employee->GetId();
-            if (max_salary < current_salary || (current_salary == max_salary && current_id < max_id)) {
-                EmployeeByCompanyId compare = EmployeeByCompanyId((best_emp));
-                best_earning_employees.remove(compare);
-                best_earning_employees.insert(EmployeeByCompanyId((employee)), employee);
-                company->SetCompanyBestEmployee(employee);
-            }
+    } else {
+        Employee *best_emp = company->GetBestSalaryEmployee();
+        int max_salary = best_emp->GetSalary();
+        int max_id = best_emp->GetId();
+        int current_salary = employee->GetSalary();
+        int current_id = employee->GetId();
+        if (max_salary < current_salary || (current_salary == max_salary && current_id < max_id)) {
+            EmployeeByCompanyId compare = EmployeeByCompanyId((best_emp));
+            best_earning_employees.remove(compare);
+            best_earning_employees.insert(EmployeeByCompanyId((employee)), employee);
+            company->SetCompanyBestEmployee(employee);
         }
     }
-
+}
 
 
 HighTech::HighTech() : employees_sorted_by_id(), companies(), employees_sorted_by_salary(), best_earning_employees() {
@@ -42,8 +38,8 @@ HighTech::~HighTech() {
     for (int i = 0; i < total_amount_of_employees; i++) {
         delete (employees[i].element);
     }
-    delete [] companies_list;
-    delete [] employees;
+    delete[] companies_list;
+    delete[] employees;
 }
 
 
@@ -88,14 +84,11 @@ void HighTech::AddEmployee(int EmployeeId, int CompanyID, int Salary, int Grade)
     }
 }
 
-void HighTech::RemoveEmployee(int employee_id)
-{
-    if (employee_id <= 0)
-    {
+void HighTech::RemoveEmployee(int employee_id) {
+    if (employee_id <= 0) {
         throw InvalidInput();
     }
-    try
-    {
+    try {
         Employee *employee = employees_sorted_by_id.find(employee_id);
         employees_sorted_by_id.remove(employee_id);
         employees_sorted_by_salary.remove(SalaryId(employee->GetSalary(), employee_id));
@@ -103,20 +96,20 @@ void HighTech::RemoveEmployee(int employee_id)
         employee->GetCompany()->GetCompanyEmployees().remove(SalaryId(employee->GetSalary(), employee_id));
         employee->GetCompany()->GetCompanyIDEmployees().remove(employee_id);
         employee->GetCompany()->RemoveEmployee();
-        if (employee->GetCompany()->GetBestSalaryEmployee()->GetId() == employee_id)  // if this employee is the best in his company...
+        if (employee->GetCompany()->GetBestSalaryEmployee()->GetId() ==
+            employee_id)  // if this employee is the best in his company...
         {
             best_earning_employees.remove(EmployeeByCompanyId(employee));
-            Company* company = employee->GetCompany();
-            if (company->GetAmountOfEmployees() > 0)
-            {
+            Company *company = employee->GetCompany();
+            if (company->GetAmountOfEmployees() > 0) {
                 company->SetCompanyBestEmployee(company->GetCompanyEmployees().GetMaxId());
-                best_earning_employees.insert(EmployeeByCompanyId(company->GetBestSalaryEmployee()),company->GetBestSalaryEmployee());
+                best_earning_employees.insert(EmployeeByCompanyId(company->GetBestSalaryEmployee()),
+                                              company->GetBestSalaryEmployee());
                 employee_with_best_salary = (employees_sorted_by_salary.GetMaxId());
             }
         }
         total_amount_of_employees--;
-        if (employee->GetCompany()->GetAmountOfEmployees() == 0)
-        {
+        if (employee->GetCompany()->GetAmountOfEmployees() == 0) {
             amount_of_companies_with_at_least_one_employee--;
         }
         employee->SetCompany(NULL);
@@ -198,8 +191,7 @@ void HighTech::HireEmployee(int EmployeeID, int NewCompanyID) {
         int salary = employee->GetSalary();
         int grade = employee->GetGrade();
         Company *company = companies.find(NewCompanyID);
-        if (company->GetCompanyIDEmployees().does_exist(EmployeeID))
-        {
+        if (company->GetCompanyIDEmployees().does_exist(EmployeeID)) {
             throw Failure();
         }
         RemoveEmployee(EmployeeID);
@@ -210,27 +202,25 @@ void HighTech::HireEmployee(int EmployeeID, int NewCompanyID) {
     }
 }
 
-void HighTech::PromoteEmployee(int EmployeeID, int SalaryIncrease, int BumpGrade)
-{
+void HighTech::PromoteEmployee(int EmployeeID, int SalaryIncrease, int BumpGrade) {
     if (EmployeeID <= 0 || SalaryIncrease <= 0) {
         throw InvalidInput();
     }
-    try
-    {
+    try {
         Employee *employee = employees_sorted_by_id.find(EmployeeID);
         Company *company = employee->GetCompany();
         company->GetCompanyEmployees().remove(SalaryId(employee->GetSalary(), EmployeeID));
         employees_sorted_by_salary.remove(SalaryId(employee->GetSalary(), EmployeeID));
         best_earning_employees.remove(EmployeeByCompanyId(company->GetBestSalaryEmployee()));
         employee->IncreaseSalary(SalaryIncrease);
-        if (BumpGrade > 0)
-        {
+        if (BumpGrade > 0) {
             employee->IncreaseGrade();
         }
         company->GetCompanyEmployees().insert(SalaryId(employee->GetSalary(), employee->GetId()), employee);
         employees_sorted_by_salary.insert(SalaryId(employee->GetSalary(), employee->GetId()), employee);
         company->SetCompanyBestEmployee(company->GetCompanyEmployees().GetMaxId());
-        best_earning_employees.insert(EmployeeByCompanyId(company->GetBestSalaryEmployee()),company->GetBestSalaryEmployee());
+        best_earning_employees.insert(EmployeeByCompanyId(company->GetBestSalaryEmployee()),
+                                      company->GetBestSalaryEmployee());
         employee_with_best_salary = employees_sorted_by_salary.GetMaxId();
 
     }
@@ -261,8 +251,7 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
             if (TargetCompany->GetAmountOfEmployees() > 0) {
                 amount_of_companies_with_at_least_one_employee--;
             }
-            if(AcquireCompany->GetAmountOfEmployees() == 0 && TargetCompany->GetAmountOfEmployees() > 0)
-            {
+            if (AcquireCompany->GetAmountOfEmployees() == 0 && TargetCompany->GetAmountOfEmployees() > 0) {
                 amount_of_companies_with_at_least_one_employee++;
             }
             AcquireCompany->GetCompanyEmployees().merge(TargetCompany->GetCompanyEmployees());
@@ -276,9 +265,9 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
                     AcquireCompany->GetAmountOfEmployees());
             for (int i = 0; i < AcquireCompany->GetAmountOfEmployees(); i++) {
                 pair_list[i].element->SetCompany(AcquireCompany);
-                pair_list[i].element=NULL;
+                pair_list[i].element = NULL;
             }
-            delete [] pair_list;
+            delete[] pair_list;
             if (AcquireCompany->GetAmountOfEmployees() > 0) {
                 Employee *best_emp = AcquireCompany->GetCompanyEmployees().GetMaxId();
                 AcquireCompany->SetCompanyBestEmployee(best_emp);
@@ -295,38 +284,26 @@ void HighTech::AcquireCompany(int AcquireID, int TargetID, double Factor) {
 }
 
 void HighTech::GetHighestEarner(int CompanyID, int *EmployeeID) {
-    if (CompanyID == 0 || EmployeeID == NULL)
-    {
+    if (CompanyID == 0 || EmployeeID == NULL) {
         throw InvalidInput();
     }
-    if (CompanyID < 0)
-    {
-        if (total_amount_of_employees == 0)
-        {
+    if (CompanyID < 0) {
+        if (total_amount_of_employees == 0) {
             throw Failure();
-        }
-        else
-        {
+        } else {
             *EmployeeID = employee_with_best_salary->GetId();
         }
-    }
-    else
-    {
-        try
-        {
-            Company* company = companies.find(CompanyID);
-            if (company->GetAmountOfEmployees() == 0)
-            {
+    } else {
+        try {
+            Company *company = companies.find(CompanyID);
+            if (company->GetAmountOfEmployees() == 0) {
                 throw Failure();
-            }
-            else
-            {
+            } else {
                 *EmployeeID = company->GetBestSalaryEmployee()->GetId();
             }
 
         }
-        catch (KeyDoesntExist& k)
-        {
+        catch (KeyDoesntExist &k) {
             throw Failure();
         }
     }
@@ -340,20 +317,19 @@ void HighTech::GetAllEmployeesBySalary(int companyID, int **Employees, int *NumO
         throw Failure();
     }
     if (companyID < 0) {
-        int amount = 0;
         int *emp = (int *) malloc(total_amount_of_employees * sizeof(int));
         Pair<Employee *, SalaryId> *pair_list = employees_sorted_by_salary.GetFirstNum(total_amount_of_employees);
         for (int i = 0; i < total_amount_of_employees; i++) {
             emp[total_amount_of_employees - 1 - i] = pair_list[i].element->GetId();
-            pair_list[i].element=NULL;
+            pair_list[i].element = NULL;
         }
-        delete [] pair_list;
+        delete[] pair_list;
         *Employees = emp;
         *NumOfEmployees = total_amount_of_employees;
     } else {
         try {
             Company *company = companies.find(companyID);
-            if (!company->GetEmployeeIdWithBestSalary()) {
+            if (company->GetAmountOfEmployees()==0) {
                 throw Failure();
             }
             int *emp = (int *) malloc(company->GetAmountOfEmployees() * sizeof(int));
@@ -361,9 +337,9 @@ void HighTech::GetAllEmployeesBySalary(int companyID, int **Employees, int *NumO
                     company->GetAmountOfEmployees());
             for (int i = 0; i < company->GetAmountOfEmployees(); i++) {
                 emp[company->GetAmountOfEmployees() - 1 - i] = pair_list[i].element->GetId();
-                pair_list[i].element=NULL;
+                pair_list[i].element = NULL;
             }
-            delete [] pair_list;
+            delete[] pair_list;
             *Employees = emp;
             *NumOfEmployees = company->GetAmountOfEmployees();
         }
@@ -384,11 +360,12 @@ void HighTech::GetHighestEarnerInEachCompany(int NumOfCompanies, int **Employees
     Pair<Employee *, EmployeeByCompanyId> *pair_list = best_earning_employees.GetFirstNum(NumOfCompanies);
     for (int i = 0; i < NumOfCompanies; i++) {
         emp[i] = pair_list[i].element->GetId();
-        pair_list[i].element=NULL;
+        pair_list[i].element = NULL;
     }
-    delete []pair_list;
+    delete[]pair_list;
     *Employees = emp;
 }
+
 void HighTech::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int MaxEmployeeID, int MinSalary, int MinGrade,
                                        int *TotalNumOfEmployees, int *NumOfEmployees) {
     if (TotalNumOfEmployees == NULL || NumOfEmployees == NULL || CompanyID == 0 || MinEmployeeID < 0 ||
@@ -396,48 +373,31 @@ void HighTech::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int Max
         throw InvalidInput();
     }
     Pair<Employee *, int> *pair_list = NULL;
-    if (CompanyID < 0)
-    {
-        if (total_amount_of_employees == 0)
-        {
+    if (CompanyID < 0) {
+        if (total_amount_of_employees == 0) {
             throw Failure();
-        }
-        else
-        {
+        } else {
             pair_list = employees_sorted_by_id.GetObjectsFromKey(MinEmployeeID, MaxEmployeeID, TotalNumOfEmployees);
         }
-    }
-    else
-    {
-        try
-        {
+    } else {
+        try {
             Company *company = companies.find(CompanyID);
-            if (company->GetAmountOfEmployees() == 0)
-            {
+            if (company->GetAmountOfEmployees() == 0) {
                 throw Failure();
             }
-            pair_list = company->GetCompanyIDEmployees().GetObjectsFromKey(MinEmployeeID,MaxEmployeeID,TotalNumOfEmployees);
+            pair_list = company->GetCompanyIDEmployees().GetObjectsFromKey(MinEmployeeID, MaxEmployeeID,
+                                                                           TotalNumOfEmployees);
         }
         catch (KeyDoesntExist &k) {
             throw Failure();
         }
     }
-    int my_total = 0;
-    if (TotalNumOfEmployees != NULL)
-    {
-        my_total = *TotalNumOfEmployees;
-    }
-    else
-    {
-        *TotalNumOfEmployees = my_total;
-    }
+    int my_total = *TotalNumOfEmployees;
     *TotalNumOfEmployees = my_total;
     int count = 0;
-    for (int i = 0; i < my_total; i++)
-    {
-        if (pair_list[i].element->GetSalary() >= MinSalary && pair_list[i].element->GetGrade() >= MinGrade)
-        {
-            pair_list[i].element=NULL;
+    for (int i = 0; i < my_total; i++) {
+        if (pair_list[i].element->GetSalary() >= MinSalary && pair_list[i].element->GetGrade() >= MinGrade) {
+            pair_list[i].element = NULL;
             count++;
         }
     }
@@ -446,8 +406,8 @@ void HighTech::GetNumEmployeesMatching(int CompanyID, int MinEmployeeID, int Max
 }
 
 
-Company::Company(int id, int value) : id(id), value(value), amount_of_employees(0), company_employees(), employees_id(),
-                                      best_salary_employee(NULL) {}
+Company::Company(int id, int value) : value(value), amount_of_employees(0), best_salary_employee(NULL),
+                                      company_employees(), employees_id(), id(id) {}
 
 void Company::AddCompanyValue(int valueIncrease) {
     value = value + valueIncrease;
@@ -487,7 +447,7 @@ int Company::GetEmployeeIdWithBestSalary() {
     return best_salary_employee->GetId();
 }
 
-void Company::SetCompanyEmployees(const Map<Employee *, SalaryId>& new_company_employees) {
+void Company::SetCompanyEmployees(const Map<Employee *, SalaryId> &new_company_employees) {
     company_employees = new_company_employees;
 }
 
@@ -503,7 +463,7 @@ int Company::GetCompanyId() const {
     return id;
 }
 
-int Company::GetCompanyAmountOfEmployees() {
+int Company::GetCompanyAmountOfEmployees() const {
     return amount_of_employees;
 }
 
@@ -514,9 +474,6 @@ void Company::SetCompanyAmountOfEmployees(int new_amount) {
 
 // Employee
 
-Employee::Employee() {
-
-}
 
 Employee::Employee(int salary, int grade, int employee_id, Company *company) : salary(salary), grade(grade),
                                                                                company(company), id(employee_id) {

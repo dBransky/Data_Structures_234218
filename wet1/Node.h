@@ -11,13 +11,13 @@
 template<class T, class Key>
 class Node {
 public:
-    int h_left;
-    int h_right;
-    int balance_factor;
     Pair<T, Key> pair;
     Node *left;
     Node *right;
     Node *father;
+    int h_left;
+    int h_right;
+    int balance_factor;
 
     Node(Node<T, Key> *left, Node<T, Key> *right, Node<T, Key> *father,
          Pair<T, Key> pair);
@@ -38,11 +38,10 @@ public:
 template<class T, class Key>
 Node<T, Key>::Node(Node<T, Key> *left, Node<T, Key> *right,
                    Node<T, Key> *father, Pair<T, Key> pair):
-
-        left(left), right(right), father(father), pair(pair) {
-    h_left=0;
-    h_right=0;
-    balance_factor=0;
+        pair(pair), left(left), right(right), father(father) {
+    h_left = 0;
+    h_right = 0;
+    balance_factor = 0;
     this->UpdateBalanceFactor();
 }
 

@@ -196,9 +196,9 @@ private:
 
     Pair<T, Key> *MergeSortedArrays(Pair<T, Key> array1[], Pair<T, Key> array2[], int array1_size, int array2_size) {
         auto *merged = new Pair<T, Key>[array1_size + array2_size];
-        int i =0;
-        int j=0;
-        int new_index=0;
+        int i = 0;
+        int j = 0;
+        int new_index = 0;
         while (i < array1_size || j < array2_size) {
             if (j == array2_size && i < array1_size) {
                 merged[new_index] = array1[i];
@@ -239,7 +239,7 @@ private:
             if (node->pair.key > *max_key)
                 return;
         }
-        if(max>*index) {
+        if (max > *index) {
             arr[*index] = node->pair;
             (*index)++;
         }
@@ -262,6 +262,7 @@ private:
         node->pair.element->id++;
         node->pair.element->id--;
         return loop_free;
+
     }
 
     void NULLInorder(Node<T, Key> *node) {
@@ -284,29 +285,30 @@ private:
         sum += CountInorder(node->right);
         return sum;
     }
-    void ArrayByMinMax(Node<T, Key> *node, Pair<T, Key> arr[], int *index,Key min_key, Key max_key) {
-        if(node->left!=NULL&&node->pair.key>=min_key)
-            ArrayByMinMax(node->left,arr,index,min_key,max_key);
-        if(node->pair.key>=min_key&&node->pair.key<=max_key)
-        {
+
+    void ArrayByMinMax(Node<T, Key> *node, Pair<T, Key> arr[], int *index, Key min_key, Key max_key) {
+        if (node->left != NULL && node->pair.key >= min_key)
+            ArrayByMinMax(node->left, arr, index, min_key, max_key);
+        if (node->pair.key >= min_key && node->pair.key <= max_key) {
             arr[*index] = node->pair;
             (*index)++;
         }
-        if(node->right!=NULL&&node->pair.key<=max_key)
-            ArrayByMinMax(node->right,arr,index,min_key,max_key);
+        if (node->right != NULL && node->pair.key <= max_key)
+            ArrayByMinMax(node->right, arr, index, min_key, max_key);
 
     }
-    void CountMinMax(Node<T, Key> *node, int *size,Key min_key, Key max_key) {
-        if(node->left!=NULL&&node->pair.key>=min_key)
-            CountMinMax(node->left,size,min_key,max_key);
-        if(node->pair.key>=min_key&&node->pair.key<=max_key)
-        {
+
+    void CountMinMax(Node<T, Key> *node, int *size, Key min_key, Key max_key) {
+        if (node->left != NULL && node->pair.key >= min_key)
+            CountMinMax(node->left, size, min_key, max_key);
+        if (node->pair.key >= min_key && node->pair.key <= max_key) {
             (*size)++;
         }
-        if(node->right!=NULL&&node->pair.key<=max_key)
-            CountMinMax(node->right,size,min_key,max_key);
+        if (node->right != NULL && node->pair.key <= max_key)
+            CountMinMax(node->right, size, min_key, max_key);
 
     }
+
 public:
     Map();
 
@@ -348,6 +350,8 @@ Map<T, Key>::Map() {
 
 template<class T, class Key>
 void Map<T, Key>::insert(Key key, T element) {
+    if(does_exist(key))
+        throw KeyAlreadyExists();
     Node<T, Key> *father = GetNodeFather(head, key);
     if (father != NULL) {
         if ((father->left != NULL && father->left->pair.key == key) ||
@@ -472,36 +476,38 @@ T Map<T, Key>::GetMaxId() {
     if (head == NULL) {
         return NULL;
     }
-    auto* node=GetRightestNode(head)->pair.element;
+    auto *node = GetRightestNode(head)->pair.element;
     return node;
 }
 
 
 template<class T, class Key>
 Pair<T, Key> *Map<T, Key>::GetFirstNum(int NumToReturn) {
+    if (NumToReturn==0)
+        return NULL;
     auto *array = new Pair<T, Key>[NumToReturn];
     int i = 0;
     StoreInorder(this->head, array, &i, NumToReturn);
-    array[NumToReturn-1].element->id++;
-    array[NumToReturn-1].element->id--;
+    array[NumToReturn - 1].element->id++;
+    array[NumToReturn - 1].element->id--;
     return array;
 }
 
 template<class T, class Key>
 Pair<T, Key> *Map<T, Key>::GetObjectsFromKey(Key min_key, Key max_key, int *size) {
-    *size=0;
-    if(head==NULL)
-    {
-        *size=0;
+    *size = 0;
+    if (head == NULL) {
+        *size = 0;
         return NULL;
     }
-    CountMinMax(head,size,min_key,max_key);
+    CountMinMax(head, size, min_key, max_key);
     auto *array = new Pair<T, Key>[*size];
-    int i=0;
-    ArrayByMinMax(head,array,&i,min_key,max_key);
+    int i = 0;
+    ArrayByMinMax(head, array, &i, min_key, max_key);
     return array;
 
 }
+
 template<class T, class Key>
 Map<T, Key>::~Map() {
     FreePostOrder(head);
@@ -521,7 +527,7 @@ void Map<T, Key>::merge(Map &map) {
     for (int i = 0; i < map.amount; ++i) {
         array1[i].element = NULL;
     }
-    for (int i = 0; i < this->amount-map.amount; ++i) {
+    for (int i = 0; i < this->amount - map.amount; ++i) {
         array2[i].element = NULL;
     }
     delete[] array1;

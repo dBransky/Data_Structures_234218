@@ -38,7 +38,7 @@ class SalaryId {
     }
 
 public:
-    SalaryId() {}
+    SalaryId()=default;
 
     SalaryId(double salary, int id) : salary(salary), id(id) {}
 };
@@ -65,7 +65,7 @@ public:
 
     int GetCompanyValue() const;
 
-    int GetCompanyAmountOfEmployees();
+    int GetCompanyAmountOfEmployees() const;
 
     void SetCompanyAmountOfEmployees(int add_amount);
 
@@ -95,7 +95,7 @@ private:
     Company *company;
 public:
     int id;
-    Employee();
+    Employee()=default;
 
     Employee(int salary, int grade, int employee_id, Company *company);
 
@@ -145,14 +145,14 @@ public:
 
 
 class HighTech {
+    Map<Employee *, int> employees_sorted_by_id;
+    Map<Company *, int> companies;
+    Map<Employee *, SalaryId> employees_sorted_by_salary;
+    Map<Employee *, EmployeeByCompanyId> best_earning_employees;
     int total_amount_of_employees;
     int amount_of_companies_with_at_least_one_employee;
     int amount_of_companies;
-    Map<Employee *, int> employees_sorted_by_id;
-    Map<Employee *, SalaryId> employees_sorted_by_salary;
-    Map<Employee *, EmployeeByCompanyId> best_earning_employees;
     Employee *employee_with_best_salary;
-    Map<Company *, int> companies;
 
 public:
     HighTech();
