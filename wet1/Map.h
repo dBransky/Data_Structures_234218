@@ -3,7 +3,6 @@
 //
 
 #include <memory>
-#include <cassert>
 #include "Node.h"
 
 
@@ -259,8 +258,6 @@ private:
         if (node == NULL)
             return true;
         bool loop_free = (node->father != node) && is_valid(node->left) && is_valid(node->right);
-        node->pair.element->id++;
-        node->pair.element->id--;
         return loop_free;
 
     }
@@ -372,7 +369,6 @@ void Map<T, Key>::insert(Key key, T element) {
             father->left->pair.element = element;
         }
         BalanceRoute(father->left);
-        assert(is_valid(head));
     } else {
         if (father->right == NULL) {
             father->right = new Node<T, Key>(NULL, NULL, father, pair);
@@ -380,7 +376,6 @@ void Map<T, Key>::insert(Key key, T element) {
             father->right->pair.element = element;
         }
         BalanceRoute(father->right);
-        assert(is_valid(head));
     }
 }
 
@@ -431,7 +426,6 @@ void Map<T, Key>::remove(Key key) {
         node->pair.element = NULL;
         delete (node);
         BalanceRoute(temp);
-        assert(is_valid(head));
         return;
     }
     if (node->right == NULL && node->left == NULL) {
@@ -468,7 +462,6 @@ void Map<T, Key>::remove(Key key) {
     node->pair.element = NULL;
     delete (node);
     BalanceRoute(temp);
-    assert(is_valid(head));
 }
 
 template<class T, class Key>
@@ -523,7 +516,6 @@ void Map<T, Key>::merge(Map &map) {
     NULLInorder(this->head);
     FreePostOrder(head);
     head = TreeFromArray(NULL, merged, 0, amount - 1);
-    assert(is_valid(head));
     for (int i = 0; i < map.amount; ++i) {
         array1[i].element = NULL;
     }
@@ -536,7 +528,6 @@ void Map<T, Key>::merge(Map &map) {
         merged[i].element = NULL;
     }
     delete[] merged;
-    assert(is_valid(head));
 
 }
 

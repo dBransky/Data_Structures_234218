@@ -10,7 +10,7 @@
 /* File Name : library1.h                                                   */
 /* Holds declarations of functions you should implement                     */
 /* Your code should compile using: "g++ -std=c++11 -DNDEBUG -Wall *.cpp"    */
-/* Tests are run with: "./a.out < test.in > test.out"                       */
+/* Tests are run with: "./a.out < in-11.txt > out-11.txt"                       */
 /*                                                                          */
 /****************************************************************************/
 

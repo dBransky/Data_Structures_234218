@@ -92,7 +92,6 @@ void HighTech::RemoveEmployee(int employee_id) {
         Employee *employee = employees_sorted_by_id.find(employee_id);
         employees_sorted_by_id.remove(employee_id);
         employees_sorted_by_salary.remove(SalaryId(employee->GetSalary(), employee_id));
-        assert(employee->GetCompany()->GetCompanyEmployees().does_exist(SalaryId(employee->GetSalary(), employee_id)));
         employee->GetCompany()->GetCompanyEmployees().remove(SalaryId(employee->GetSalary(), employee_id));
         employee->GetCompany()->GetCompanyIDEmployees().remove(employee_id);
         employee->GetCompany()->RemoveEmployee();
