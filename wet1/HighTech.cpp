@@ -315,6 +315,9 @@ void HighTech::GetAllEmployeesBySalary(int companyID, int **Employees, int *NumO
     if (companyID < 0 && employee_with_best_salary == NULL) {
         throw Failure();
     }
+    if (companyID < 0 && total_amount_of_employees == 0) {
+        throw Failure();
+    }
     if (companyID < 0) {
         int *emp = (int *) malloc(total_amount_of_employees * sizeof(int));
         Pair<Employee *, SalaryId> *pair_list = employees_sorted_by_salary.GetFirstNum(total_amount_of_employees);
