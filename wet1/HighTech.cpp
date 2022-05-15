@@ -106,6 +106,11 @@ void HighTech::RemoveEmployee(int employee_id) {
                                               company->GetBestSalaryEmployee());
                 employee_with_best_salary = (employees_sorted_by_salary.GetMaxId());
             }
+            else
+            {
+                company->SetCompanyBestEmployee(NULL);
+                employee_with_best_salary = (employees_sorted_by_salary.GetMaxId());
+            }
         }
         total_amount_of_employees--;
         if (employee->GetCompany()->GetAmountOfEmployees() == 0) {
