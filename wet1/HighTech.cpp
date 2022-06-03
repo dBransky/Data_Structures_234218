@@ -105,9 +105,7 @@ void HighTech::RemoveEmployee(int employee_id) {
                 best_earning_employees.insert(EmployeeByCompanyId(company->GetBestSalaryEmployee()),
                                               company->GetBestSalaryEmployee());
                 employee_with_best_salary = (employees_sorted_by_salary.GetMaxId());
-            }
-            else
-            {
+            } else {
                 company->SetCompanyBestEmployee(NULL);
                 employee_with_best_salary = (employees_sorted_by_salary.GetMaxId());
             }
@@ -317,9 +315,6 @@ void HighTech::GetAllEmployeesBySalary(int companyID, int **Employees, int *NumO
     if (Employees == NULL || NumOfEmployees == NULL || companyID == 0) {
         throw InvalidInput();
     }
-    if (companyID < 0 && employee_with_best_salary == NULL) {
-        throw Failure();
-    }
     if (companyID < 0 && total_amount_of_employees == 0) {
         throw Failure();
     }
@@ -336,7 +331,7 @@ void HighTech::GetAllEmployeesBySalary(int companyID, int **Employees, int *NumO
     } else {
         try {
             Company *company = companies.find(companyID);
-            if (company->GetAmountOfEmployees()==0) {
+            if (company->GetAmountOfEmployees() == 0) {
                 throw Failure();
             }
             int *emp = (int *) malloc(company->GetAmountOfEmployees() * sizeof(int));

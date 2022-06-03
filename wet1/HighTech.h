@@ -5,7 +5,7 @@
 #ifndef DATA_STRUCTURES_234218_HIGHTECH_H
 #define DATA_STRUCTURES_234218_HIGHTECH_H
 
-#include "Map.h"
+#include "MyMap.h"
 
 class Exceptions : public std::exception {
 };
